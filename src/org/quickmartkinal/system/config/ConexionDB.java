@@ -3,11 +3,44 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package org.quickmartkinal.system.config;
-
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 /**
  *
  * @author herna
  */
 public class ConexionDB {
 	
+      private static ConexionDB instanciaConexionDB;
+    private Connection connection;
+
+    private ConexionDB(){
+        try{   
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            connection = DriverManager.getConnection(
+                    "jdbc:mysql://" + Enviroment.LOCATION_SERVICE+"/"
+                            + Enviroment.DATA_BASE,
+                   Enviroment.USER, Enviroment.PASSWORD);
+        }catch (ClassNotFoundException classNotFound){
+            System.out.println("Error clase no encontrada");
+        }catch (SQLException sQLException){
+            System.out.println("ERROR DE CONEXION DB");
+        }catch(Exception e){
+            System.out.println("Error padre" + e.getMessage());
+        }
+    }
+    public static ConexionDB getInstanciaConexionDB(){
+            if (instanciaConexionDB == null) 
+            instanciaConexionDB = new ConexionDB();
+            return instanciaConexionDB;
+    }
+ 
+    public Connection getConnection() {
+        return connection;
+    }
+ 
+    public void setConnection(Connection connection) {
+        this.connection = connection;
+    }
 }
