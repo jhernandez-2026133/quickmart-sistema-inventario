@@ -1,4 +1,4 @@
-src/quickmartkinal/system/config/Environment.java
+src/org/quickmartkinal/system/config/Environment.java
 dist/*
 build/*
 
