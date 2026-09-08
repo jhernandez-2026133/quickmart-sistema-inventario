@@ -1,6 +1,7 @@
-drop database if exists quickmart_db;
-create database quickmart_db;
-use quickmart_db;
+drop database if exists proyecto_quickmart_inventory_kinal_in4av;
+create database proyecto_quickmart_inventory_kinal_in4av;
+use proyecto_quickmart_inventory_kinal_in4av;
+
 
 create table rol(
     id_rol int not null auto_increment,
@@ -14,7 +15,7 @@ create table usuario(
     nombre_usuario varchar(50) not null,
     contrasena varchar(255) not null,
     id_rol int not null,
-    constraint pk_usuario primary key (id_usuario),
+    constraint usuario_pk primary key (id_usuario),
     constraint uq_usuario_nombre unique (nombre_usuario),
     constraint fk_usuario_rol foreign key (id_rol) references rol(id_rol)
 );
