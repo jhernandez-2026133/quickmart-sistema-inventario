@@ -1,18 +1,3 @@
-<<<<<<< HEAD
-package org.quickmartkinal.system;
-
-    import org.quickmartkinal.system.utils.SceneManager;
-    import org.quickmartkinal.system.utils.ViewFactory;
-
-public class ClasePrincipal {
-
-    
-
-    public static void main(String[] args) {
-
-    }
-    
-=======
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
@@ -37,5 +22,4 @@ public class ClasePrincipal extends Application {
         viewFactory.viewLogin();
     }
 
->>>>>>> 05be444258df5c84736a3d2340d725e86c358462
 }
