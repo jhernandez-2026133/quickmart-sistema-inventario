@@ -1,0 +1,71 @@
+.root {
+    -fx-background-color: #1b2124;
+    -fx-font-family: "Segoe UI";
+
+    -color-bg-dark: #1b2124;  
+    -color-card: #242b2f;     
+    -color-white: #ffffff;     
+    -color-green: #2e7d32;   
+    -color-green-hover: #388e3c;
+    -color-blue: #1e88e5;      
+    -color-orange: #f57c00;    
+    -color-orange-hover: #fb8c00;
+}
+
+.card {
+    -fx-background-color: -color-card;
+    -fx-background-radius: 16;
+    -fx-border-radius: 16;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.45), 14, 0.2, 0, 4);
+}
+
+.etiqueta {
+    -fx-text-fill: -color-white;
+    -fx-font-size: 13px;
+}
+
+
+.etiqueta-secundaria {
+    -fx-text-fill: derive(-color-white, -15%);
+    -fx-font-size: 12px;
+}
+
+.campo {
+    -fx-background-color: -color-white;
+    -fx-text-fill: #1b2124;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-border-color: -color-blue;
+    -fx-border-width: 1.5px;
+    -fx-padding: 6 10 6 10;
+    -fx-prompt-text-fill: #7d8a94;
+}
+
+.campo:focused {
+    -fx-border-color: derive(-color-blue, 25%);
+    -fx-effect: dropshadow(gaussian, -color-blue, 8, 0.35, 0, 0);
+}
+
+.btn-primary {
+    -fx-background-color: -color-green;
+    -fx-text-fill: -color-white;
+    -fx-background-radius: 24;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+.btn-primary:hover {
+    -fx-background-color: -color-green-hover;
+}
+.btn-primary:pressed {
+    -fx-background-color: derive(-color-green, -15%);
+}
+
+.link-accent {
+    -fx-text-fill: -color-orange;
+    -fx-font-weight: bold;
+    -fx-underline: false;
+}
+.link-accent:hover {
+    -fx-text-fill: derive(-color-orange, 20%);
+    -fx-underline: true;
+}

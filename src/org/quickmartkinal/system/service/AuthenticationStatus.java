@@ -2,12 +2,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package org.quickmartkinal.system.controller;
+package org.quickmartkinal.system.service;
 
 /**
  *
- * @author herna
+ * @author informatica
  */
-public class Controller {
-	
+public enum AuthenticationStatus {
+    INVALID_CREDENTIALS,
+    LOGIN_SUCCESS
 }
