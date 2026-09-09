@@ -4,10 +4,36 @@
  */
 package org.quickmartkinal.system.utils;
 
-/**
- *
- * @author informatica
- */
 public class Sesion {
-    
+
+
+    private static Sesion instanciaSesion;
+    private Usuario usuarioActual;
+
+    private Sesion() {
+    }
+
+    public static Sesion getInstanciaSesion() {
+        if (instanciaSesion == null) {
+            instanciaSesion = new Sesion();
+        }
+        return instanciaSesion;
+    }
+
+    public Usuario getUsuarioActual() {
+        return usuarioActual;
+    }
+
+    public void setUsuarioActual(Usuario usuarioActual) {
+        this.usuarioActual = usuarioActual;
+    }
+
+    public String getRolActual() {
+        return usuarioActual != null ? usuarioActual.getNombreRol() : null;
+    }
+
+    public void cerrarSesion() {
+        usuarioActual = null;
+    }
+
 }
