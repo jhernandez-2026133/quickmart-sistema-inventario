@@ -46,7 +46,7 @@
                         <Font name="DejaVu Serif" size="14.0" />
                      </font>
                   </Label>
-                  <Hyperlink fx:id="linkRegister" styleClass="link-accent" alignment="CENTER" onKeyPressed="#onRegister" prefHeight="37.0" prefWidth="127.0" text="Crear Cuenta">
+                  <Hyperlink fx:id="linkRegister" styleClass="link-accent" alignment="CENTER" onAction="#onRegister" prefHeight="37.0" prefWidth="127.0" text="Crear Cuenta">
                      <font>
                         <Font size="18.0" />
                      </font>

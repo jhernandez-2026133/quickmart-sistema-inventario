@@ -22,6 +22,8 @@ create table Users(
     id_user varchar(36) not null,
     id_rol varchar(36) not null,
     constraint pk_users primary key (id_user),
+    constraint uq_users_user unique (user),
+    constraint uq_users_email unique (email),
     constraint fk_users_rol foreign key (id_rol) references Roles(id_rol)
 );
  
@@ -156,8 +158,49 @@ delimiter $$
     end$$
 delimiter ;
 
+delimiter $$
+	create procedure sp_obtener_rol_por_nombre(in nombre_rol_p varchar(50))
+    begin
+		select id_rol, nombre_rol, descripcion
+        from Roles
+        where nombre_rol = nombre_rol_p;
+    end$$
+delimiter ;
+
+delimiter $$
+	create procedure sp_existe_usuario(in user_p varchar(25), in email_p varchar(50))
+    begin
+		select count(*) as total
+        from Users
+        where user = user_p or email = email_p;
+    end$$
+delimiter ;
+
+-- ============================================================================
+-- AUTENTICACION (columnas alineadas con AuthenticationRepository.java,
+-- que lee del ResultSet las claves "nombre_usuario" y "nombre_rol")
+
+delimiter $$
+	create procedure sp_validar_login(in username_p varchar(25),
+									   in password_p varchar(35))
+    begin
+		select
+			u.id_user,
+			u.user      as nombre_usuario,
+			r.nombre_rol as nombre_rol
+        from Users u
+        inner join Roles r on u.id_rol = r.id_rol
+        where u.user = username_p
+			and u.password = password_p;
+    end$$
+delimiter ;
+
+-- ============================================================================
+-- DATOS DE PRUEBA
+
 call sp_create_roles('Gerente', 'Supervisa reportes de ventas e inventario');
 call sp_create_roles("Cajero", "El atiende al cliente y es encargado en cobrabrarel producto");
+call sp_create_roles('Cliente', 'Usuario registrado desde la aplicacion');
 call sp_mostrar_roles();
 call sp_create_users('Dereck', 'Marroquin', 'Derml@correo.com', 'Kirely1', 'KD123', 'ae7fa370-abd6-11f1-9762-04d9f5886b91');
 call sp_create_users("David", "Hernandez", "David@gmail.com", "Davdd2", "DDVID", "1137f2da-ac8e-11f1-b77f-04d9f5886b91");

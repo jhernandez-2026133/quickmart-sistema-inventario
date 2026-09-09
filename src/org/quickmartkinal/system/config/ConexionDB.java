@@ -13,12 +13,12 @@ import java.sql.SQLException;
  * @author informatica
  */
 public class ConexionDB {
-	
-      private static ConexionDB instanciaConexionDB;
+
+    private static ConexionDB instanciaConexionDB;
     private Connection connection;
 
-    private ConexionDB(){
-        try{   
+    private ConexionDB() {
+        try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             connection = DriverManager.getConnection(
                     "jdbc:mysql://" + Environment.LOCATION_SERVICE+"/"
@@ -30,23 +30,32 @@ public class ConexionDB {
             System.out.println("ERROR DE CONEXION DB");
         }catch(Exception e){
             System.out.println("Error padre" + e.getMessage());
+                    "jdbc:mysql://" + Environment.LOCATION_SERVICE + "/" + Environment.DATA_BASE,Environment.USER,
+                    Environment.PASSWORD);
+        } catch (ClassNotFoundException classNotFound) {
+            System.out.println("Error: clase no encontrada.");
+        } catch (SQLException sqlException) {
+            System.out.println("Error de conexion a la base de datos.");
+        } catch (Exception e) {
+            System.out.println("Error inesperado: " + e.getMessage());
         }
     }
-    public static ConexionDB getInstanciaConexionDB(){
-            if (instanciaConexionDB == null) 
+
+    public static ConexionDB getInstanciaConexionDB() {
+        if (instanciaConexionDB == null) {
             instanciaConexionDB = new ConexionDB();
-            return instanciaConexionDB;
+        }
+        return instanciaConexionDB;
     }
- 
+
     public Connection getConnection() {
         return connection;
     }
- 
+
     public void setConnection(Connection connection) {
         this.connection = connection;
     }
 
-   
 
 }
 

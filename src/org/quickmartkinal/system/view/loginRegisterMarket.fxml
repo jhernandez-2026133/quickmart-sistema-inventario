@@ -13,9 +13,12 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import java.net.URL?>
 
-
-<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="350.0" spacing="10.0" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="350.0" spacing="10.0" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.quickmartkinal.system.controller.RegisterController">
+   <stylesheets>
+      <URL value="@../resources/styles/RegisterUserStyles.css" />
+   </stylesheets>
    <padding>
       <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
    </padding>
@@ -25,10 +28,10 @@
             <Image url="@../resources/images/quickMartKinalLogo.jpg" />
          </image>
       </ImageView>
-      <GridPane>
+      <GridPane hgap="6.0" vgap="10.0">
         <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="110.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="200.0" />
         </columnConstraints>
         <rowConstraints>
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -39,36 +42,33 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label text="Usuario" />
-            <Label text="nombres" GridPane.rowIndex="1" />
-            <Label text="Apellidos" GridPane.rowIndex="2" />
-            <TextField GridPane.columnIndex="1" />
-            <TextField GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <TextField GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <TextField GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <PasswordField GridPane.columnIndex="1" GridPane.rowIndex="4" />
-            <PasswordField GridPane.columnIndex="1" GridPane.rowIndex="5" />
-            <Label text="correo" GridPane.rowIndex="3" />
-            <Label text="Contraseña" GridPane.rowIndex="4" />
-            <Label text="Confirmar Contraseña" GridPane.rowIndex="5" />
+            <Label styleClass="etiqueta" text="Usuario" />
+            <Label styleClass="etiqueta" text="Nombres" GridPane.rowIndex="1" />
+            <Label styleClass="etiqueta" text="Apellidos" GridPane.rowIndex="2" />
+            <Label styleClass="etiqueta" text="Correo" GridPane.rowIndex="3" />
+            <Label styleClass="etiqueta" text="Contraseña" GridPane.rowIndex="4" />
+            <Label styleClass="etiqueta" text="Confirmar" GridPane.rowIndex="5" />
+            <TextField fx:id="txtUsername" styleClass="campo" GridPane.columnIndex="1" />
+            <TextField fx:id="txtName" styleClass="campo" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <TextField fx:id="txtLastName" styleClass="campo" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <TextField fx:id="txtEmail" styleClass="campo" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <PasswordField fx:id="pwdPassword" styleClass="campo" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <PasswordField fx:id="pwdConfirmPassword" styleClass="campo" GridPane.columnIndex="1" GridPane.rowIndex="5" />
          </children>
       </GridPane>
-      <HBox alignment="TOP_CENTER" prefHeight="102.0" prefWidth="340.0" spacing="45.0">
+      <HBox alignment="TOP_CENTER" prefHeight="102.0" prefWidth="340.0" spacing="20.0">
          <children>
-            <Button fx:id="btnCancel" mnemonicParsing="false" text="Cancelar">
+            <Button fx:id="btnCancel" styleClass="btn-secondary" mnemonicParsing="false" onAction="#onCancel" text="Cancelar">
                <font>
                   <Font name="Dubai Bold" size="14.0" />
                </font>
             </Button>
-            <Button fx:id="btnCreateUser" mnemonicParsing="false" text="Crear usuario">
+            <Button fx:id="btnCreateUser" styleClass="btn-primary" mnemonicParsing="false" onAction="#onCreateUser" text="Crear usuario">
                <font>
                   <Font name="Dubai Bold" size="14.0" />
                </font>
             </Button>
          </children>
-         <VBox.margin>
-            <Insets />
-         </VBox.margin>
          <padding>
             <Insets top="25.0" />
          </padding>
