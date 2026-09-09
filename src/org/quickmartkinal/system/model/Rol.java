@@ -9,27 +9,26 @@ package org.quickmartkinal.system.model;
  * @author informatica
  */
 public class Rol {
-
-    private int idRol;
+    
+    private String idRol;
     private String nombreRol;
-
-    public Rol() {
+    private String descripcionRol;
+    
+    public Rol () {
+        
     }
 
-    public Rol(int idRol, String nombreRol) {
+    public Rol(String idRol, String nombreRol, String descripcionRol) {
         this.idRol = idRol;
         this.nombreRol = nombreRol;
+        this.descripcionRol = descripcionRol;
     }
 
-    public Rol(String nombreRol) {
-        this.nombreRol = nombreRol;
-    }
-
-    public int getIdRol() {
+    public String getIdRol() {
         return idRol;
     }
 
-    public void setIdRol(int idRol) {
+    public void setIdRol(String idRol) {
         this.idRol = idRol;
     }
 
@@ -41,4 +40,12 @@ public class Rol {
         this.nombreRol = nombreRol;
     }
 
+    public String getDescripcionRol() {
+        return descripcionRol;
+    }
+
+    public void setDescripcionRol(String descripcionRol) {
+        this.descripcionRol = descripcionRol;
+    }
+    
 }
