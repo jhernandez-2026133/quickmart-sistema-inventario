@@ -157,7 +157,9 @@ delimiter $$
 delimiter ;
 
 call sp_create_roles('Gerente', 'Supervisa reportes de ventas e inventario');
+call sp_create_roles("Cajero", "El atiende al cliente y es encargado en cobrabrarel producto");
 call sp_mostrar_roles();
 call sp_create_users('Dereck', 'Marroquin', 'Derml@correo.com', 'Kirely1', 'KD123', 'ae7fa370-abd6-11f1-9762-04d9f5886b91');
+call sp_create_users("David", "Hernandez", "David@gmail.com", "Davdd2", "DDVID", "1137f2da-ac8e-11f1-b77f-04d9f5886b91");
 call sp_mostrar_users();
 
