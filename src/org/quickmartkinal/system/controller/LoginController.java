@@ -62,6 +62,7 @@ public class LoginController implements Initializable {
     public void onRegister(KeyEvent event) {
         // TODO: navegar a la vista de registro (loginRegisterMarket.fxml)
         // cuando el flujo de creacion de cuenta este implementado.
+	//esperar codigo
     }
 
 }
