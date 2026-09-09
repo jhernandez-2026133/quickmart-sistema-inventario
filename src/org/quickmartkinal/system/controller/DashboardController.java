@@ -38,8 +38,8 @@ public class DashboardController implements Initializable {
     @FXML
     public void onLogout(MouseEvent event) {
         Sesion.getInstanciaSesion().cerrarSesion();
-        ViewFactory viewFacto = new ViewFactory();
-        viewFacto.viewLogin();
+        ViewFactory viewFactory = new ViewFactory();
+        viewFactory.viewLogin();
     }
 
 }

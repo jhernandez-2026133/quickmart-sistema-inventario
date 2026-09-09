@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import org.quickmartkinal.system.service.AuthenticationService;
 import org.quickmartkinal.system.service.AuthenticationStatus;
@@ -38,7 +39,7 @@ public class LoginController implements Initializable {
         String usuario = txtUsuario.getText().trim();
         String contrasena = pwdContrasena.getText().trim();
 
-        if (validate.validatetextEmpty(usuario) == true || validate.validatetextEmpty(contrasena) == true) {
+        if (validate.validateTextEmpty(usuario) || validate.validateTextEmpty(contrasena)) {
             alertInfo.viewAlert("ERROR", "CAMPOS VACIOS", "ERROR DE CAMPOS", "Debes ingresar usuario y contraseña.");
             return;
         }
@@ -51,10 +52,16 @@ public class LoginController implements Initializable {
                         "El usuario o la contraseña no son correctos. Intenta nuevamente.");
             case LOGIN_SUCCESS -> {
                 Sesion.getInstanciaSesion().setUsuarioActual(authService.getAuthenticatedUser());
-                ViewFactory viewFacto = new ViewFactory();
-                viewFacto.viewDashboard(authService.getAuthenticatedUser());
+                ViewFactory viewFactory = new ViewFactory();
+                viewFactory.viewDashboard(authService.getAuthenticatedUser());
             }
         }
+    }
+
+    @FXML
+    public void onRegister(KeyEvent event) {
+        // TODO: navegar a la vista de registro (loginRegisterMarket.fxml)
+        // cuando el flujo de creacion de cuenta este implementado.
     }
 
 }

@@ -13,21 +13,16 @@ public class Validations {
     public Validations() {
     }
 
-    public Boolean validatetextEmpty(String text) {
-        boolean isEmpty = false;
-
-        if (text.isEmpty() == true || text.isBlank() == true) {
-            isEmpty = true;
-        }
-        return isEmpty;
+    public boolean validateTextEmpty(String text) {
+        return text.isEmpty() || text.isBlank();
     }
 
-    public Boolean validateTextLenght(String text, int textmax) {
-        return text.length() <= textmax;
+    public boolean validateTextLength(String text, int maxLength) {
+        return text.length() <= maxLength;
     }
 
-    public Boolean equalsText(String textoOriginal, String textCompare) {
-        return textoOriginal.equals(textCompare);
+    public boolean equalsText(String originalText, String compareText) {
+        return originalText.equals(compareText);
     }
 
 }
