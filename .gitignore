@@ -1,8 +1,6 @@
 nbproject/private/
 
-<<<<<<< HEAD
 /build/
-=======
 src/org/quickmartkinal/system/config/Environment.java
 dist/*
 build/*
@@ -53,4 +51,3 @@ build/*
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 replay_pid*
->>>>>>> 291c5e2ea68d5ae16dd1e3ffaa743a7358892b54
