@@ -4,10 +4,45 @@
  */
 package org.quickmartkinal.system.utils;
 
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+
 /**
  *
  * @author informatica
  */
 public class SceneManager {
-    
+
+    private static SceneManager instanciaSceneManager;
+    private Stage stagePrincipal;
+
+    private SceneManager() {
+    }
+
+    public static SceneManager getInstanciaScenerManager() {
+        if (instanciaSceneManager == null) {
+            instanciaSceneManager = new SceneManager();
+        }
+        return instanciaSceneManager;
+    }
+
+    public void changeScene(Scene scene) {
+        try {
+            stagePrincipal.setScene(scene);
+            stagePrincipal.sizeToScene();
+            stagePrincipal.show();
+
+        } catch (NullPointerException objetoNulo) {
+            //ALERT
+        }
+    }
+
+    public Stage getStagePrincipal() {
+        return stagePrincipal;
+    }
+
+    public void setStagePrincipal(Stage stagePrincipal) {
+        this.stagePrincipal = stagePrincipal;
+    }
+
 }
