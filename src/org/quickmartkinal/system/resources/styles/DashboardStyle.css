@@ -1,0 +1,33 @@
+.root {
+    -fx-background-color: #F4F7F5;
+    -fx-font-family: "Segoe UI";
+}
+
+.titulo {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1E7145;
+}
+
+.subtitulo {
+    -fx-font-size: 12px;
+    -fx-text-fill: #5A6B63;
+    -fx-text-alignment: center;
+}
+
+.etiqueta {
+    -fx-font-size: 14px;
+    -fx-text-fill: #33403A;
+}
+
+.btn-login {
+    -fx-background-color: #1E7145;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 6px;
+    -fx-cursor: hand;
+}
+
+.btn-login:hover {
+    -fx-background-color: #175934;
+}

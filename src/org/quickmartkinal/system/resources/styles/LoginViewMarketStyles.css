@@ -1,0 +1,78 @@
+.root {
+    /* Fondo oscuro general de la ventana */
+    -fx-background-color: #1b2124;
+    -fx-font-family: "Segoe UI";
+
+    /* ---- Paleta QuickMart ---- */
+    -color-bg-dark: #1b2124;   /* Fondo oscuro */
+    -color-card: #242b2f;      /* Panel un poco mas claro sobre el fondo oscuro */
+    -color-white: #ffffff;     /* Blanco -> texto limpio */
+    -color-green: #2e7d32;     /* Verde -> fresco / natural */
+    -color-green-hover: #388e3c;
+    -color-blue: #1e88e5;      /* Azul -> confianza */
+    -color-orange: #f57c00;    /* Naranja -> promociones / dinamismo */
+    -color-orange-hover: #fb8c00;
+}
+
+/* Tarjeta central que contiene el formulario de login */
+.card {
+    -fx-background-color: -color-card;
+    -fx-background-radius: 16;
+    -fx-border-radius: 16;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.45), 14, 0.2, 0, 4);
+}
+
+/* Etiquetas de texto -> blanco limpio */
+.etiqueta {
+    -fx-text-fill: -color-white;
+    -fx-font-size: 13px;
+}
+
+/* Texto secundario (ej. "¿No tienes una cuenta?") en blanco atenuado */
+.etiqueta-secundaria {
+    -fx-text-fill: derive(-color-white, -15%);
+    -fx-font-size: 12px;
+}
+
+/* Campos de texto -> claros, con borde azul (confianza) */
+.campo {
+    -fx-background-color: -color-white;
+    -fx-text-fill: #1b2124;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-border-color: -color-blue;
+    -fx-border-width: 1.5px;
+    -fx-padding: 6 10 6 10;
+    -fx-prompt-text-fill: #7d8a94;
+}
+
+.campo:focused {
+    -fx-border-color: derive(-color-blue, 25%);
+    -fx-effect: dropshadow(gaussian, -color-blue, 8, 0.35, 0, 0);
+}
+
+/* Boton principal (Iniciar Sesion) -> verde fresco con texto blanco */
+.btn-primary {
+    -fx-background-color: -color-green;
+    -fx-text-fill: -color-white;
+    -fx-background-radius: 24;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+.btn-primary:hover {
+    -fx-background-color: -color-green-hover;
+}
+.btn-primary:pressed {
+    -fx-background-color: derive(-color-green, -15%);
+}
+
+/* Enlace "Crear Cuenta" -> naranja, dinamismo */
+.link-accent {
+    -fx-text-fill: -color-orange;
+    -fx-font-weight: bold;
+    -fx-underline: false;
+}
+.link-accent:hover {
+    -fx-text-fill: derive(-color-orange, 20%);
+    -fx-underline: true;
+}
