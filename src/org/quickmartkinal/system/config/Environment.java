@@ -10,7 +10,7 @@ package org.quickmartkinal.system.config;
  */
 public class Environment {
     protected static final String USER = "IN4AV";
-    protected static final String PASSWORD ="&mnid4AV";
-    protected static final String DATA_BASE="proyecto-quickmart-inventory-kinal-in4av";
-    protected static final String LOCATION_SERVICE="localhost:3306";
+    protected static final String PASSWORD = "&mnid4AV";
+    protected static final String DATA_BASE= "proyecto-quickmart-inventory-kinal-in4av";
+    protected static final String LOCATION_SERVICE= "localhost:3306";
 }
