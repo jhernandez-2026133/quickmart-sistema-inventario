@@ -4,13 +4,12 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Users/Informatica/Desktop/B4/quickmart-sistema-inventario/src/org/quickmartkinal/system/utils/ViewFactory.java</file>
-            <file>file:/C:/Users/Informatica/Desktop/B4/quickmart-sistema-inventario/src/org/quickmartkinal/system/utils/alertInformation.java</file>
             <file>file:/C:/Users/Informatica/Desktop/B4/quickmart-sistema-inventario/src/org/quickmartkinal/system/resources/styles/RegisterUserStyles.css</file>
+            <file>file:/C:/Users/Informatica/Desktop/B4/quickmart-sistema-inventario/src/org/quickmartkinal/system/utils/Session.java</file>
+            <file>file:/C:/Users/Informatica/Desktop/B4/quickmart-sistema-inventario/src/org/quickmartkinal/system/ClasePrincipal.java</file>
+            <file>file:/C:/Users/Informatica/Desktop/B4/quickmart-sistema-inventario/src/org/quickmartkinal/system/utils/AlertInformation.java</file>
+            <file>file:/C:/Users/Informatica/Desktop/B4/quickmart-sistema-inventario/src/org/quickmartkinal/system/utils/Validations.java</file>
             <file>file:/C:/Users/Informatica/Desktop/B4/quickmart-sistema-inventario/src/org/quickmartkinal/system/utils/SceneManager.java</file>
-            <file>file:/C:/Users/Informatica/Desktop/B4/quickmart-sistema-inventario/src/org/quickmartkinal/system/utils/validation.java</file>
-            <file>file:/C:/Users/Informatica/Desktop/B4/quickmart-sistema-inventario/src/org/quickmartkinal/system/Main.java</file>
-            <file>file:/C:/Users/Informatica/Desktop/B4/quickmart-sistema-inventario/src/org/quickmartkinal/system/model/User.java</file>
-            <file>file:/C:/Users/Informatica/Desktop/B4/quickmart-sistema-inventario/src/org/quickmartkinal/system/utils/Sesion.java</file>
             <file>file:/C:/Users/Informatica/Desktop/B4/quickmart-sistema-inventario/src/org/quickmartkinal/system/resources/styles/LoginViewMarketStyles.css</file>
         </group>
     </open-files>
