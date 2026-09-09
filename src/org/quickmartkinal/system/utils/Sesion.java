@@ -4,15 +4,8 @@
  */
 package org.quickmartkinal.system.utils;
 
-import org.quickmartkinal.system.model.Usuario;
-
-/**
- * Guarda quién inició sesión y con qué rol, para que el resto del programa
- * pueda consultarlo sin volver a pedir las credenciales.
- *
- * @author informatica
- */
 public class Sesion {
+
 
     private static Sesion instanciaSesion;
     private Usuario usuarioActual;
