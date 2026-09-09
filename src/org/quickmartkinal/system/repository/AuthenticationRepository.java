@@ -40,9 +40,7 @@ public class AuthenticationRepository implements AuthenticationInterface {
             }
             callSP.close();
         } catch (SQLException e) {
-            System.out.println("Error al iniciar sesion");
-            System.out.println(e.getMessage());
-            e.printStackTrace();
+            System.out.println("Error al iniciar sesion: " + e.getMessage());
         }
         return usuarioLogueado;
     }

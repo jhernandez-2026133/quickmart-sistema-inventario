@@ -1,3 +1,10 @@
+<<<<<<< HEAD
+=======
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+>>>>>>> develop
 package org.quickmartkinal.system.utils;
 
 <<<<<<< HEAD
@@ -91,18 +98,16 @@ import org.quickmartkinal.system.ClasePrincipal;
 import org.quickmartkinal.system.controller.DashboardController;
 import org.quickmartkinal.system.model.Usuario;
 
-
 /**
  *
  * @author informatica
  */
 public class ViewFactory {
 
-
-    private final String PATH_VIEWS = "/org/quickmartkinal/system/view/";
+    private static final String PATH_VIEWS = "/org/quickmartkinal/system/view/";
     private final AlertInformation alertInfo = new AlertInformation();
 
-    public Scene LoadFileFXML(String nameFile, int width, int height) {
+    public Scene loadFileFXML(String nameFile, int width, int height) {
         String pathOffFile = PATH_VIEWS + nameFile;
         try {
             FXMLLoader loaderFXML = new FXMLLoader();
@@ -118,21 +123,21 @@ public class ViewFactory {
     }
 
     public void loadScene(String nameFile) {
-        Scene scene = null;
+        Scene scene;
         try {
             switch (nameFile) {
                 case "login" -> {
-                    SceneManager.getInstanciaScenerManager().getStagePrincipal().setTitle("QUICKMART - INICIO DE SESION");
-                    SceneManager.getInstanciaScenerManager().getStagePrincipal().setResizable(false);
-                    scene = LoadFileFXML("LoginView.fxml", 400, 500);
+                    SceneManager.getInstanciaSceneManager().getStagePrincipal().setTitle("QUICKMART - INICIO DE SESION");
+                    SceneManager.getInstanciaSceneManager().getStagePrincipal().setResizable(false);
+                    scene = loadFileFXML("loginViewMarket.fxml", 400, 500);
                 }
-                default -> scene = LoadFileFXML("LoginView.fxml", 400, 500);
+                default -> scene = loadFileFXML("loginViewMarket.fxml", 400, 500);
             }
 
-            SceneManager.getInstanciaScenerManager().changeScene(scene);
+            SceneManager.getInstanciaSceneManager().changeScene(scene);
 
-        } catch (NullPointerException objetoNulo) {
-            System.out.println("Error load Scene");
+        } catch (NullPointerException nullPointerException) {
+            System.out.println("Error al cargar la escena.");
         }
     }
 
@@ -156,16 +161,18 @@ public class ViewFactory {
 
             Scene scene = new Scene(root, 700, 480);
 
-            SceneManager.getInstanciaScenerManager().getStagePrincipal().setTitle("QUICKMART - CATALOGO");
-            SceneManager.getInstanciaScenerManager().getStagePrincipal().setResizable(true);
-            SceneManager.getInstanciaScenerManager().changeScene(scene);
+            SceneManager.getInstanciaSceneManager().getStagePrincipal().setTitle("QUICKMART - CATALOGO");
+            SceneManager.getInstanciaSceneManager().getStagePrincipal().setResizable(true);
+            SceneManager.getInstanciaSceneManager().changeScene(scene);
 
         } catch (IOException e) {
-            System.out.println("Error al cargar el Dashboard");
-            System.out.println(e.getMessage());
-            e.printStackTrace();
+            System.out.println("Error al cargar el Dashboard: " + e.getMessage());
             alertInfo.viewAlert("ERROR", "ERROR AL CARGAR", "ERROR AL ABRIR EL MODULO", "Ocurrio un error, intenta nuevamente.");
         }
     }
+<<<<<<< HEAD
 >>>>>>> 05be444258df5c84736a3d2340d725e86c358462
+=======
+
+>>>>>>> develop
 }
