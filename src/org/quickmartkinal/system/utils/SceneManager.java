@@ -19,7 +19,7 @@ public class SceneManager {
     private SceneManager() {
     }
 
-    public static SceneManager getInstanciaScenerManager() {
+    public static SceneManager getInstanciaSceneManager() {
         if (instanciaSceneManager == null) {
             instanciaSceneManager = new SceneManager();
         }
@@ -31,9 +31,8 @@ public class SceneManager {
             stagePrincipal.setScene(scene);
             stagePrincipal.sizeToScene();
             stagePrincipal.show();
-
-        } catch (NullPointerException objetoNulo) {
-            //ALERT
+        } catch (NullPointerException nullPointerException) {
+            System.out.println("Error: no se ha definido el stage principal.");
         }
     }
 

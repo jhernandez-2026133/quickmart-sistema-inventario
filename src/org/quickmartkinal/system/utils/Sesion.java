@@ -4,8 +4,13 @@
  */
 package org.quickmartkinal.system.utils;
 
-public class Sesion {
+import org.quickmartkinal.system.model.Usuario;
 
+/**
+ *
+ * @author informatica
+ */
+public class Sesion {
 
     private static Sesion instanciaSesion;
     private Usuario usuarioActual;
