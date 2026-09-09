@@ -1,3 +1,4 @@
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
@@ -15,11 +16,13 @@ import org.quickmartkinal.system.ClasePrincipal;
 import org.quickmartkinal.system.controller.DashboardController;
 import org.quickmartkinal.system.model.Usuario;
 
+
 /**
  *
  * @author informatica
  */
 public class ViewFactory {
+
 
     private final String PATH_VIEWS = "/org/quickmartkinal/system/view/";
     private final AlertInformation alertInfo = new AlertInformation();
