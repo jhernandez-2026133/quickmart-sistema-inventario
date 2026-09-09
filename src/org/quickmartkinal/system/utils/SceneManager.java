@@ -1,9 +1,23 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package org.quickmartkinal.system.utils;
 
+<<<<<<< HEAD
+import javafx.stage.Stage;
+import javafx.scene.Scene;
+
+public class SceneManager {
+    private static SceneManager instanciaSceneManager;
+    private Stage stagePrincipal;
+    
+    private SceneManager() {}
+    
+    public static SceneManager getInstanciaSceneManager(){
+        if ( instanciaSceneManager == null )
+             instanciaSceneManager = new SceneManager();
+        return instanciaSceneManager;
+    }
+    
+    public void chanceScene ( Scene scene ){
+=======
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
@@ -27,13 +41,26 @@ public class SceneManager {
     }
 
     public void changeScene(Scene scene) {
+>>>>>>> 05be444258df5c84736a3d2340d725e86c358462
         try {
             stagePrincipal.setScene(scene);
             stagePrincipal.sizeToScene();
             stagePrincipal.show();
+<<<<<<< HEAD
+<<<<<<< HEAD
+        } catch (NullPointerException objetoNulo) {
+        }
+    
+=======
+
+        } catch (NullPointerException objetoNulo) {
+            //ALERT
+=======
         } catch (NullPointerException nullPointerException) {
             System.out.println("Error: no se ha definido el stage principal.");
+>>>>>>> develop
         }
+>>>>>>> 05be444258df5c84736a3d2340d725e86c358462
     }
 
     public Stage getStagePrincipal() {
@@ -43,5 +70,9 @@ public class SceneManager {
     public void setStagePrincipal(Stage stagePrincipal) {
         this.stagePrincipal = stagePrincipal;
     }
+<<<<<<< HEAD
+    
+=======
 
+>>>>>>> 05be444258df5c84736a3d2340d725e86c358462
 }
