@@ -1,70 +1,18 @@
-<<<<<<< HEAD
-package org.quickmartkinal.system.utils;
-
-
-
-public class Validations {
- 
-    public Validations(){ 
-    
-    }
-    
-    public Boolean validateTextEmpty(String text){
-        
-        boolean isEmpty = false;
-        
-        if( text.isEmpty() == true || text.isBlank() == true )
-            isEmpty = true;
-        return isEmpty;
-    }
-    
-    public Boolean validateTextLength( String text, int textMax){
-        
-        return text.length()<= textMax;
-    }
-    
-    public Boolean equalsText(String textOriginal,
-                              String textCompare){
-        
-    return textOriginal.equals(textCompare);
-    }
-    
-    public Boolean validateEmail(String email){
-        
-        int dotCount = 0 , arrobeCount=0;
-        
-        for( int index = 0; index < email.length(); index++ ){
-            if( email.charAt(index) == '.' )
-                dotCount++;
-            if( dotCount >1 )
-                return false;
-        }
-        
-            //validar cantidad arrobas
-        for( int index = 0; index < email.length(); index++ ){
-            if( email.charAt(index) == '@' )
-                arrobeCount++;
-        }
-        
-         if( arrobeCount != 1 )
-                return false;
-        
-      return true;  
-    }
-    
-    
-=======
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package org.quickmartkinal.system.utils;
 
+import java.util.regex.Pattern;
+
 /**
  *
  * @author informatica
  */
 public class Validations {
+
+    private static final Pattern EMAIL_PATTERN = Pattern.compile("^[\\w.+-]+@[\\w-]+\\.[a-zA-Z]{2,}$");
 
     public Validations() {
     }
@@ -77,9 +25,16 @@ public class Validations {
         return text.length() <= maxLength;
     }
 
+    public boolean validateTextMinLength(String text, int minLength) {
+        return text.length() >= minLength;
+    }
+
     public boolean equalsText(String originalText, String compareText) {
         return originalText.equals(compareText);
     }
 
->>>>>>> 05be444258df5c84736a3d2340d725e86c358462
+    public boolean validateEmail(String email) {
+        return EMAIL_PATTERN.matcher(email).matches();
+    }
+
 }

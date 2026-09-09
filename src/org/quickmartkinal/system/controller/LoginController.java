@@ -6,11 +6,11 @@ package org.quickmartkinal.system.controller;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import org.quickmartkinal.system.service.AuthenticationService;
 import org.quickmartkinal.system.service.AuthenticationStatus;
@@ -59,10 +59,9 @@ public class LoginController implements Initializable {
     }
 
     @FXML
-    public void onRegister(KeyEvent event) {
-        // TODO: navegar a la vista de registro (loginRegisterMarket.fxml)
-        // cuando el flujo de creacion de cuenta este implementado.
-	//esperar codigo
+    public void onRegister(ActionEvent event) {
+        ViewFactory viewFactory = new ViewFactory();
+        viewFactory.viewRegister();
     }
 
 }
