@@ -27,7 +27,8 @@ public class ConexionDB {
         } catch (ClassNotFoundException classNotFound) {
             System.out.println("Error: clase no encontrada.");
         } catch (SQLException sqlException) {
-            System.out.println("Error de conexion a la base de datos.");
+        System.out.println("Error de conexion a la base de datos: " + sqlException.getMessage());
+        sqlException.printStackTrace();
         } catch (Exception e) {
             System.out.println("Error inesperado: " + e.getMessage());
         }
