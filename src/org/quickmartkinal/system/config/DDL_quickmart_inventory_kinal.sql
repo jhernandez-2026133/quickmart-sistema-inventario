@@ -196,6 +196,76 @@ delimiter $$
 delimiter ;
 
 -- ============================================================================
+-- INSERTAR
+ 
+delimiter $$
+	create procedure sp_insertar_producto (in nombre_producto_p varchar (100),
+											in costo_p double (10,2),
+                                            in precio_venta_p double (10,2),
+											in stock_p int)
+	begin 
+		IF precio_venta_p <= costo_p THEN
+        -- SIGNAL: Esta funcion nos sirve para para que la base de datos
+        -- interrumpa el proceso actual y devuelva una alerta de error
+         SIGNAL SQLSTATE '45000'
+		-- SQLSTATE '45000' nos sirve para indicar una exepcion generada
+        -- El número 45000 es un valor por defecto y lanza un error generico definido por el usuario
+        -- El número 45000 es un valor por defecto y lanza un error generico definido por el usuario
+         SET MESSAGE_TEXT = "El precio de venta debe ser mayor al costo del producto.";
+		-- MESSAGE_TEXT: Nos muestra el mensage explicando el error
+     END IF;
+		insert into Producto (nombre, costo, precio_venta, stock, id_producto)
+        values (nombre_p, costo_p, precio_venta_p, stock_p, uuid());
+    end $$
+delimiter ;
+
+-- ============================================================================
+-- REGISTRAR ENTRADA/SALIDA DE STOCK
+
+delimiter $$
+	create procedure sp_registrar_movimiento_stock (in id_producto_p varchar (36),
+													in tipo_movimiento_p varchar (10),  -- Tiene que ser: "ENTRADA" o "SALIDA"
+													in cantidad_p int)
+	begin
+    -- Validar que la cantidad sea positiva
+		if cantidad_p <= 0 then
+			SIGNAL SQLSTATE '45000'
+			SET MESSAGE_TEXT = "La cantidad debe ser mayor a 0.";
+		end if;
+ 
+    -- Validar que el producto exista
+		if (select count(*) from Producto where id_producto = id_producto_p) = 0 then
+			SIGNAL SQLSTATE '45000'
+			SET MESSAGE_TEXT = "El producto ingresado no existe.";
+		end if;
+ 
+		if tipo_movimiento_p = "ENTRADA" then
+			update Producto
+			set stock = stock + cantidad_p
+			where id_producto = id_producto_p;
+ 
+		elseif tipo_movimiento_p = "SALIDA" then
+        -- Solo actualiza si hay stock suficiente (condición en el WHERE)
+			update Producto
+			set stock = stock - cantidad_p
+			where id_producto = id_producto_p
+			   and stock >= cantidad_p;
+ 
+        -- Si no afectó ninguna fila, es porque no había stock suficiente
+        -- row_count(): sirve para saber cuantas filas fueron afectadas
+        if row_count() = 0 then
+            SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = "No hay suficiente stock disponible para esta salida.";
+        end if;
+ 
+		else
+			SIGNAL SQLSTATE '45000'
+			SET MESSAGE_TEXT = "Tipo de movimiento inválido. Usa ENTRADA o SALIDA.";
+		end if;
+	end $$
+delimiter ;
+
+-- ============================================================================
 -- DATOS DE PRUEBA
 
 call sp_create_roles('Gerente', 'Supervisa reportes de ventas e inventario');
@@ -205,4 +275,5 @@ call sp_mostrar_roles();
 call sp_create_users('Dereck', 'Marroquin', 'Derml@correo.com', 'Kirely1', 'KD123', 'ae7fa370-abd6-11f1-9762-04d9f5886b91');
 call sp_create_users("David", "Hernandez", "David@gmail.com", "Davdd2", "DDVID", "1137f2da-ac8e-11f1-b77f-04d9f5886b91");
 call sp_mostrar_users();
+call sp_insertar_producto ("Manzana", 8.50, 12.00, 85);
 
