@@ -53,7 +53,7 @@ public class LoginController implements Initializable {
             case LOGIN_SUCCESS -> {
                 Sesion.getInstanciaSesion().setUsuarioActual(authService.getAuthenticatedUser());
                 ViewFactory viewFactory = new ViewFactory();
-                viewFactory.viewDashboard(authService.getAuthenticatedUser());
+                viewFactory.viewCatalogo(authService.getAuthenticatedUser());
             }
         }
     }
