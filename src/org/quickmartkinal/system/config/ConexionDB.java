@@ -13,12 +13,13 @@ import java.sql.SQLException;
  * @author informatica
  */
 public class ConexionDB {
-
     private static ConexionDB instanciaConexionDB;
     private Connection connection;
-
-    private ConexionDB() {
+    
+      
+      private ConexionDB() { 
         try {
+
             Class.forName("com.mysql.cj.jdbc.Driver");
             connection = DriverManager.getConnection(
                     "jdbc:mysql://" + Environment.LOCATION_SERVICE + "/" + Environment.DATA_BASE,Environment.USER,
@@ -26,11 +27,14 @@ public class ConexionDB {
         } catch (ClassNotFoundException classNotFound) {
             System.out.println("Error: clase no encontrada.");
         } catch (SQLException sqlException) {
-            System.out.println("Error de conexion a la base de datos.");
+        System.out.println("Error de conexion a la base de datos: " + sqlException.getMessage());
+        sqlException.printStackTrace();
         } catch (Exception e) {
             System.out.println("Error inesperado: " + e.getMessage());
         }
+
     }
+ 
 
     public static ConexionDB getInstanciaConexionDB() {
         if (instanciaConexionDB == null) {
