@@ -1,5 +1,6 @@
 nbproject/private/
 
+/build/
 src/org/quickmartkinal/system/config/Environment.java
 dist/*
 build/*
