@@ -47,6 +47,29 @@ create table Producto(
     constraint uq_producto_codigo unique (codigo),
     constraint fk_producto_categoria foreign key (id_categoria) references Categoria(id_categoria)
 );
+
+-- Ventas Y Detalle de ventas
+-- =======================================================================
+create table Venta(
+	fecha datetime not null,
+    total decimal(10,2) not null check (total>=0),
+    id_venta varchar(36) not null,
+    id_user varchar(36) not null,
+    constraint pk_venta primary key (id_venta),
+    constraint fk_venta_user foreign key (id_user) references Users(id_user)
+);
+ 
+create table Detalle_venta(
+	cantidad int not null check (cantidad>0),
+    precio_unitario decimal(10,2) not null check (precio_unitario>=0),
+    subtotal decimal(10,2) not null check (subtotal>=0),
+    id_detalle_venta varchar(36) not null,
+    id_venta varchar(36) not null,
+    id_producto varchar(36) not null,
+    constraint pk_detalle_venta primary key (id_detalle_venta),
+    constraint fk_detalle_venta_venta foreign key (id_venta) references Venta(id_venta),
+    constraint fk_detalle_venta_producto foreign key (id_producto) references Producto(id_producto)
+);
  
 -- ============================================================================
 -- CREATE
@@ -339,4 +362,5 @@ call sp_mostrar_roles();
 call sp_create_users('Dereck', 'Marroquin', 'Derml@correo.com', 'Kirely1', 'KD1233', 'ae7fa370-abd6-11f1-9762-04d9f5886b91');
 call sp_create_users("David", "Hernandez", "David@gmail.com", "Davdd2", "DDVID", "1137f2da-ac8e-11f1-b77f-04d9f5886b91");
 call sp_mostrar_producto();
+call sp_mostrar_users();
 
