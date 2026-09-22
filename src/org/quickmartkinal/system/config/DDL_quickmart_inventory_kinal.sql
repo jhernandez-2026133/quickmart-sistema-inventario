@@ -117,6 +117,28 @@ delimiter $$
 			values(codigo_p, nombre_p, existencia_p, precio_p, uuid(), id_categoria_p);
     end$$
 delimiter ;
+-- -------------------------------------------------------------------------------------
+delimiter $$
+	create procedure sp_create_venta(in fecha_p datetime,
+									 in total_p decimal(10,2),
+                                     in id_user_p varchar(36))
+    begin
+		insert into Venta(fecha, total, id_venta, id_user)
+			values(fecha_p, total_p, uuid(), id_user_p);
+    end$$
+delimiter ;
+ 
+delimiter $$
+	create procedure sp_create_detalle_venta(in cantidad_p int,
+											 in precio_unitario_p decimal(10,2),
+                                             in subtotal_p decimal(10,2),
+                                             in id_venta_p varchar(36),
+                                             in id_producto_p varchar(36))
+    begin
+		insert into Detalle_venta(cantidad, precio_unitario, subtotal, id_detalle_venta, id_venta, id_producto)
+			values(cantidad_p, precio_unitario_p, subtotal_p, uuid(), id_venta_p, id_producto_p);
+    end$$
+delimiter ;
  
 -- --------------------------------------------------------------------------------------
 -- MOSTRAR 
@@ -165,6 +187,33 @@ delimiter $$
                c.nombre_categoria as 'Categoria'
         from Producto p
         inner join Categoria c on p.id_categoria = c.id_categoria;
+    end$$
+delimiter ;
+-- ------------------------------------------------------------------------
+delimiter $$
+	create procedure sp_mostrar_venta()
+    begin
+		select v.id_venta as 'ID Venta',
+               v.fecha    as 'Fecha',
+               v.total    as 'Total',
+               u.user     as 'Usuario'
+        from Venta v
+        inner join Users u on v.id_user = u.id_user;
+    end$$
+delimiter ;
+ 
+delimiter $$
+	create procedure sp_mostrar_detalle_venta()
+    begin
+		select dv.id_detalle_venta as 'ID Detalle Venta',
+               dv.cantidad         as 'Cantidad',
+               dv.precio_unitario  as 'Precio Unitario',
+               dv.subtotal         as 'Subtotal',
+               p.nombre            as 'Producto',
+               v.id_venta          as 'ID Venta'
+        from Detalle_venta dv
+        inner join Producto p on dv.id_producto = p.id_producto
+        inner join Venta v on dv.id_venta = v.id_venta;
     end$$
 delimiter ;
  
@@ -218,6 +267,32 @@ delimiter $$
                p.id_categoria  as 'ID Categoria'
         from Producto p
         where p.id_producto = id_producto_p;
+    end$$
+delimiter ;
+-- ---------------------------------------------------------------------------
+delimiter $$
+	create procedure sp_leer_venta(in id_venta_p varchar(36))
+    begin
+		select id_venta as 'ID Venta',
+               fecha    as 'Fecha',
+               total    as 'Total',
+               id_user  as 'ID Usuario'
+        from Venta
+        where id_venta = id_venta_p;
+    end$$
+delimiter ;
+ 
+delimiter $$
+	create procedure sp_leer_detalle_venta(in id_detalle_venta_p varchar(36))
+    begin
+		select id_detalle_venta as 'ID Detalle Venta',
+               cantidad         as 'Cantidad',
+               precio_unitario  as 'Precio Unitario',
+               subtotal         as 'Subtotal',
+               id_venta         as 'ID Venta',
+               id_producto      as 'ID Producto'
+        from Detalle_venta
+        where id_detalle_venta = id_detalle_venta_p;
     end$$
 delimiter ;
  
@@ -285,6 +360,38 @@ delimiter $$
         where id_producto = id_producto_p;
     end$$
 delimiter ;
+-- --------------------------------------------------------------------------
+delimiter $$
+	create procedure sp_editar_venta(in id_venta_p varchar(36),
+									 in fecha_p datetime,
+                                     in total_p decimal(10,2),
+                                     in id_user_p varchar(36))
+    begin
+		update Venta
+        set fecha = fecha_p,
+            total = total_p,
+            id_user = id_user_p
+        where id_venta = id_venta_p;
+    end$$
+delimiter ;
+ 
+delimiter $$
+	create procedure sp_editar_detalle_venta(in id_detalle_venta_p varchar(36),
+											 in cantidad_p int,
+                                             in precio_unitario_p decimal(10,2),
+                                             in subtotal_p decimal(10,2),
+                                             in id_venta_p varchar(36),
+                                             in id_producto_p varchar(36))
+    begin
+		update Detalle_venta
+        set cantidad = cantidad_p,
+            precio_unitario = precio_unitario_p,
+            subtotal = subtotal_p,
+            id_venta = id_venta_p,
+            id_producto = id_producto_p
+        where id_detalle_venta = id_detalle_venta_p;
+    end$$
+delimiter ;
  
 -- ============================================================================
 -- ELIMINAR
@@ -334,6 +441,20 @@ delimiter $$
 		delete from Producto where id_producto = id_producto_p;
     end$$
 delimiter ;
+-- -----------------------------------------------------------
+delimiter $$
+	create procedure sp_eliminar_venta(in id_venta_p varchar(36))
+    begin
+		delete from Venta where id_venta = id_venta_p;
+    end$$
+delimiter ;
+ 
+delimiter $$
+	create procedure sp_eliminar_detalle_venta(in id_detalle_venta_p varchar(36))
+    begin
+		delete from Detalle_venta where id_detalle_venta = id_detalle_venta_p;
+    end$$
+delimiter ;
 -- ============================================================================
 
 
@@ -358,9 +479,12 @@ delimiter ;
 call sp_create_roles('Gerente', 'Supervisa reportes de ventas e inventario');
 call sp_create_roles("Cajero", "El atiende al cliente y es encargado en cobrabrarel producto");
 call sp_create_roles('Cliente', 'Usuario registrado desde la aplicacion');
+call sp_create_roles ("Bodeguero", "Se encarga ver el inventario de los productos");
+
 call sp_mostrar_roles();
-call sp_create_users('Dereck', 'Marroquin', 'Derml@correo.com', 'Kirely1', 'KD1233', 'ae7fa370-abd6-11f1-9762-04d9f5886b91');
+call sp_create_users('Dereck', 'Marroquin', 'Derml@correo.com', 'Kirely1', 'KD1233', 'bc874ba1-b21b-11f1-afe0-04d9f5886b91');
 call sp_create_users("David", "Hernandez", "David@gmail.com", "Davdd2", "DDVID", "1137f2da-ac8e-11f1-b77f-04d9f5886b91");
+call sp_create_users("Checha", "Piojon", "Checha@gmail.com", "Checha", "c12351","d139a37f-b6ba-11f1-a438-04d9f5886b91");
 call sp_mostrar_producto();
 call sp_mostrar_users();
 
