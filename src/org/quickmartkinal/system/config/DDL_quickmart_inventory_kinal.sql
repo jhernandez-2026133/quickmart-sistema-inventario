@@ -399,15 +399,13 @@ delimiter ;
 -- ============================================================================
 -- DATOS DE PRUEBA
 -- NOTA: se agregaron Administrador y Bodeguero (los roles que pedia el
--- documento del proyecto y que no se habian creado). 'Cliente' se
--- mantiene: es el rol por defecto que usa RegistrationService cuando
--- alguien crea su cuenta desde "Crear cuenta" (el Cliente es quien
--- aparece en el comprobante que imprime el Cajero).
+-- documento del proyecto y que no se habian creado). Se elimino el rol
+-- Cajero: el Cliente arma su propio carrito y finaliza la compra desde
+-- la misma vista del catalogo, sin que un Cajero intervenga.
 
 call sp_create_roles('Administrador', 'Gestiona el catalogo, los usuarios y la configuracion del sistema');
 call sp_create_roles('Gerente', 'Supervisa el inventario y el estado general del negocio');
 call sp_create_roles('Bodeguero', 'Controla entradas y salidas de stock');
-call sp_create_roles('Cajero', 'Atiende al cliente y registra las ventas');
 call sp_create_roles('Cliente', 'Usuario registrado desde la aplicacion para realizar compras');
 call sp_mostrar_roles();
 

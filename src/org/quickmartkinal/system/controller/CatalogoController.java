@@ -18,7 +18,9 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.VBox;
 import org.quickmartkinal.system.model.Categoria;
+import org.quickmartkinal.system.model.ItemCarrito;
 import org.quickmartkinal.system.model.Producto;
 import org.quickmartkinal.system.model.Usuario;
 import org.quickmartkinal.system.service.CatalogoService;
@@ -31,6 +33,7 @@ import org.quickmartkinal.system.utils.ViewFactory;
 public class CatalogoController implements Initializable {
 
     private static final String ROL_GERENTE = "Gerente";
+    private static final String ROL_CLIENTE = "Cliente";
 
     @FXML
     private Label lblBienvenida;
@@ -55,13 +58,19 @@ public class CatalogoController implements Initializable {
     private TableColumn<Producto, Double> colPrecioVenta;
 
     @FXML
+    private Label lblCodigo;
+    @FXML
     private TextField txtCodigo;
     @FXML
     private TextField txtNombre;
     @FXML
     private ComboBox<Categoria> cmbCategoria;
     @FXML
+    private Label lblStock;
+    @FXML
     private TextField txtStock;
+    @FXML
+    private Label lblCosto;
     @FXML
     private TextField txtCosto;
     @FXML
@@ -76,11 +85,30 @@ public class CatalogoController implements Initializable {
     @FXML
     private Button btnLimpiar;
 
+    @FXML
+    private VBox panelCarrito;
+    @FXML
+    private TableView<ItemCarrito> tblCarrito;
+    @FXML
+    private TableColumn<ItemCarrito, String> colCarritoProducto;
+    @FXML
+    private TableColumn<ItemCarrito, Integer> colCarritoCantidad;
+    @FXML
+    private TableColumn<ItemCarrito, Double> colCarritoSubtotal;
+    @FXML
+    private Label lblTotalCarrito;
+    @FXML
+    private Button btnQuitarDelCarrito;
+    @FXML
+    private Button btnFinalizarCompra;
+
     private final CatalogoService catalogoService = new CatalogoService();
     private final Validations validate = new Validations();
     private final AlertInformation alertInfo = new AlertInformation();
+    private final ObservableList<ItemCarrito> carrito = FXCollections.observableArrayList();
 
     private Producto productoSeleccionado;
+    private boolean esCliente = false;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -99,8 +127,11 @@ public class CatalogoController implements Initializable {
             lblRol.setText("Rol: " + usuarioActual.getNombreRol());
         }
 
+        String rolActual = usuarioActual != null ? usuarioActual.getNombreRol() : "";
+        boolean esGerente = ROL_GERENTE.equals(rolActual);
+        esCliente = ROL_CLIENTE.equals(rolActual);
+
         // THU 3.5: el Gerente solo puede consultar el catalogo, no editarlo.
-        boolean esGerente = usuarioActual != null && ROL_GERENTE.equals(usuarioActual.getNombreRol());
         if (esGerente) {
             txtCodigo.setDisable(true);
             txtNombre.setDisable(true);
@@ -108,18 +139,50 @@ public class CatalogoController implements Initializable {
             txtStock.setDisable(true);
             txtCosto.setDisable(true);
             txtPrecioVenta.setDisable(true);
-            btnGuardar.setVisible(false);
-            btnGuardar.setManaged(false);
-            btnEditar.setVisible(false);
-            btnEditar.setManaged(false);
-            btnEliminar.setVisible(false);
-            btnEliminar.setManaged(false);
-            btnLimpiar.setVisible(false);
-            btnLimpiar.setManaged(false);
+            ocultar(btnGuardar, btnEditar, btnEliminar, btnLimpiar);
+        }
+
+        // El Cliente no administra el catalogo: solo ve producto/categoria/precio,
+        // usa el campo "Stock" como cantidad a comprar, y "Guardar" agrega al carrito.
+        if (esCliente) {
+            ocultar(lblCodigo, txtCodigo, lblCosto, txtCosto, btnEditar, btnEliminar);
+            colCosto.setVisible(false);
+            txtNombre.setEditable(false);
+            txtPrecioVenta.setEditable(false);
+            cmbCategoria.setDisable(true);
+            lblStock.setText("Cantidad a comprar");
+            btnGuardar.setText("Agregar al carrito");
+
+            panelCarrito.setVisible(true);
+            panelCarrito.setManaged(true);
+            configurarTablaCarrito();
         }
 
         cargarCategorias();
         cargarProductos();
+    }
+
+    private void ocultar(javafx.scene.Node... nodos) {
+        for (javafx.scene.Node nodo : nodos) {
+            nodo.setVisible(false);
+            nodo.setManaged(false);
+        }
+    }
+
+    private void configurarTablaCarrito() {
+        colCarritoProducto.setCellValueFactory(new PropertyValueFactory<>("nombreProducto"));
+        colCarritoCantidad.setCellValueFactory(new PropertyValueFactory<>("cantidad"));
+        colCarritoSubtotal.setCellValueFactory(new PropertyValueFactory<>("subtotal"));
+        tblCarrito.setItems(carrito);
+        actualizarTotalCarrito();
+    }
+
+    private void actualizarTotalCarrito() {
+        double total = 0;
+        for (ItemCarrito item : carrito) {
+            total += item.getSubtotal();
+        }
+        lblTotalCarrito.setText(String.format("Total: Q%.2f", total));
     }
 
     private void cargarCategorias() {
@@ -139,7 +202,7 @@ public class CatalogoController implements Initializable {
         }
         txtCodigo.setText(productoSeleccionado.getCodigoBarras());
         txtNombre.setText(productoSeleccionado.getNombre());
-        txtStock.setText(String.valueOf(productoSeleccionado.getStock()));
+        txtStock.setText(esCliente ? "1" : String.valueOf(productoSeleccionado.getStock()));
         txtCosto.setText(String.valueOf(productoSeleccionado.getPrecioCosto()));
         txtPrecioVenta.setText(String.valueOf(productoSeleccionado.getPrecioVenta()));
 
@@ -181,10 +244,13 @@ public class CatalogoController implements Initializable {
 
     @FXML
     public void onGuardar(MouseEvent event) {
+        if (esCliente) {
+            onAgregarAlCarrito();
+            return;
+        }
         if (camposValidos() == false) {
             return;
         }
-
         Producto producto;
         try {
             producto = construirProductoDesdeFormulario();
@@ -192,9 +258,76 @@ public class CatalogoController implements Initializable {
             alertInfo.viewAlert("ERROR", "DATOS INVALIDOS", "ERROR DE FORMATO", "Stock, costo y precio de venta deben ser numeros.");
             return;
         }
-
         CatalogoStatus status = catalogoService.crearProducto(producto);
         mostrarResultado(status);
+    }
+
+    private void onAgregarAlCarrito() {
+        if (productoSeleccionado == null) {
+            alertInfo.viewAlert("ERROR", "SIN SELECCION", "ERROR", "Selecciona un producto de la tabla para agregarlo al carrito.");
+            return;
+        }
+
+        int cantidad;
+        try {
+            cantidad = Integer.parseInt(txtStock.getText().trim());
+        } catch (NumberFormatException e) {
+            alertInfo.viewAlert("ERROR", "CANTIDAD INVALIDA", "ERROR DE FORMATO", "La cantidad a comprar debe ser un numero.");
+            return;
+        }
+
+        if (cantidad <= 0) {
+            alertInfo.viewAlert("ERROR", "CANTIDAD INVALIDA", "ERROR", "La cantidad a comprar debe ser mayor a 0.");
+            return;
+        }
+        if (cantidad > productoSeleccionado.getStock()) {
+            alertInfo.viewAlert("ERROR", "STOCK INSUFICIENTE", "ERROR", "Solo hay " + productoSeleccionado.getStock() + " unidades disponibles.");
+            return;
+        }
+
+        for (ItemCarrito item : carrito) {
+            if (item.getProducto().getIdProducto().equals(productoSeleccionado.getIdProducto())) {
+                item.setCantidad(item.getCantidad() + cantidad);
+                tblCarrito.refresh();
+                actualizarTotalCarrito();
+                limpiarFormulario();
+                return;
+            }
+        }
+
+        carrito.add(new ItemCarrito(productoSeleccionado, cantidad));
+        actualizarTotalCarrito();
+        limpiarFormulario();
+    }
+
+    @FXML
+    public void onQuitarDelCarrito(MouseEvent event) {
+        ItemCarrito seleccionado = tblCarrito.getSelectionModel().getSelectedItem();
+        if (seleccionado == null) {
+            alertInfo.viewAlert("ERROR", "SIN SELECCION", "ERROR", "Selecciona un producto del carrito para quitarlo.");
+            return;
+        }
+        carrito.remove(seleccionado);
+        actualizarTotalCarrito();
+    }
+
+    @FXML
+    public void onFinalizarCompra(MouseEvent event) {
+        if (carrito.isEmpty()) {
+            alertInfo.viewAlert("ERROR", "CARRITO VACIO", "ERROR", "Agrega al menos un producto antes de finalizar la compra.");
+            return;
+        }
+
+        // NOTA: el registro real de la venta (y el comprobante en PDF) Se hara cuando ya este el sprint 3
+        StringBuilder resumen = new StringBuilder();
+        for (ItemCarrito item : carrito) {
+            resumen.append(item.getCantidad()).append(" x ").append(item.getNombreProducto()).append("\n");
+        }
+        resumen.append(lblTotalCarrito.getText());
+
+        alertInfo.viewAlert("INFORMATION", "COMPRA REGISTRADA", "RESUMEN DE TU COMPRA", resumen.toString());
+        carrito.clear();
+        actualizarTotalCarrito();
     }
 
     @FXML
