@@ -1,4 +1,4 @@
- -- drop database if exists proyecto_quickmart_inventory_kinal_in4av;
+	-- drop database if exists proyecto_quickmart_inventory_kinal_in4av;
 create database proyecto_quickmart_inventory_kinal_in4av;
 use proyecto_quickmart_inventory_kinal_in4av;
  
@@ -200,8 +200,8 @@ delimiter ;
  
 delimiter $$
 	create procedure sp_insertar_producto (in nombre_producto_p varchar (100),
-											in costo_p double (10,2),
-                                            in precio_venta_p double (10,2),
+											in costo_p decimal (10,2),
+                                            in precio_venta_p decimal (10,2),
 											in stock_p int)
 	begin 
 		IF precio_venta_p <= costo_p THEN
@@ -264,6 +264,32 @@ delimiter $$
 		end if;
 	end $$
 delimiter ;
+
+-- ============================================================================
+-- COMPROBANTE DE VENTA
+
+delimiter $$
+	create procedure sp_comprobante_venta(in id_venta_p varchar (36))
+    begin 
+		select 
+			v.id_venta           as `ID Venta`,
+            v.fecha              as `Fecha`,
+            u.user               as `Cajero`,
+            p.nombre             as `Producto`,
+            c.nombre_categoria   as `Categoria`,
+            dv.cantidad          as `Cantidad`,
+            dv.precio_unitario   as `Precio Unitario`,
+            (dv.cantidad * dv.precio_unitario) as `Subtotal`
+		from Venta v
+			inner join Users u 			on v.id_user = u.id_user
+			inner join DetalleVenta dv 	on dv.id_venta = v.id_venta
+			inner join Producto p 		on p.id_producto = dv.id_producto
+			inner join Categoria c 		on c.id_categoria = p.id_categoria
+		where v.id_venta = id_venta_p
+			order by p.nombre;
+    end $$
+delimiter ;
+
 
 -- ============================================================================
 -- DATOS DE PRUEBA
