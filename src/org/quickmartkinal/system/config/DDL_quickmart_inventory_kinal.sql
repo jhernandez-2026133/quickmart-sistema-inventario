@@ -1,4 +1,4 @@
-drop database if exists proyecto_quickmart_inventory_kinal_in4av;
+-- drop database if exists proyecto_quickmart_inventory_kinal_in4av;
 create database proyecto_quickmart_inventory_kinal_in4av;
 use proyecto_quickmart_inventory_kinal_in4av;
 
@@ -37,10 +37,6 @@ create table Categoria(
     constraint uq_categoria_nombre unique (nombre_categoria)
 );
 
--- NOTA: esta tabla unifica las dos versiones que quedaron en conflicto.
--- Se mantiene el codigo de barras y la categoria (rama A) y se agrega
--- el costo separado del precio de venta (rama B), ya que ambos son
--- requisitos del documento del proyecto (HU-02).
 create table Producto(
 	codigo varchar (20) not null check (length(codigo)<=20),
     nombre varchar (100) not null check (length(nombre)<=100),
@@ -52,6 +48,29 @@ create table Producto(
     constraint pk_producto primary key (id_producto),
     constraint uq_producto_codigo unique (codigo),
     constraint fk_producto_categoria foreign key (id_categoria) references Categoria(id_categoria)
+);
+
+-- Ventas Y Detalle de ventas
+-- =======================================================================
+create table Venta(
+	fecha datetime not null,
+    total decimal(10,2) not null check (total>=0),
+    id_venta varchar(36) not null,
+    id_user varchar(36) not null,
+    constraint pk_venta primary key (id_venta),
+    constraint fk_venta_user foreign key (id_user) references Users(id_user)
+);
+
+create table Detalle_venta(
+	cantidad int not null check (cantidad>0),
+    precio_unitario decimal(10,2) not null check (precio_unitario>=0),
+    subtotal decimal(10,2) not null check (subtotal>=0),
+    id_detalle_venta varchar(36) not null,
+    id_venta varchar(36) not null,
+    id_producto varchar(36) not null,
+    constraint pk_detalle_venta primary key (id_detalle_venta),
+    constraint fk_detalle_venta_venta foreign key (id_venta) references Venta(id_venta),
+    constraint fk_detalle_venta_producto foreign key (id_producto) references Producto(id_producto)
 );
 
 -- ============================================================================
@@ -89,8 +108,6 @@ delimiter $$
     end$$
 delimiter ;
 
--- Unifica sp_create_producto (rama A) y la validacion de precio de
--- sp_insertar_producto (rama B) en un solo procedimiento.
 delimiter $$
 	create procedure sp_create_producto(in codigo_p varchar(20),
 										in nombre_p varchar(100),
@@ -109,7 +126,30 @@ delimiter $$
     end$$
 delimiter ;
 
--- --------------------------------------------------------------------------------------
+-- -------------------------------------------------------------------------------------
+delimiter $$
+	create procedure sp_create_venta(in fecha_p datetime,
+									 in total_p decimal(10,2),
+                                     in id_user_p varchar(36))
+    begin
+		insert into Venta(fecha, total, id_venta, id_user)
+			values(fecha_p, total_p, uuid(), id_user_p);
+    end$$
+delimiter ;
+
+delimiter $$
+	create procedure sp_create_detalle_venta(in cantidad_p int,
+											 in precio_unitario_p decimal(10,2),
+                                             in subtotal_p decimal(10,2),
+                                             in id_venta_p varchar(36),
+                                             in id_producto_p varchar(36))
+    begin
+		insert into Detalle_venta(cantidad, precio_unitario, subtotal, id_detalle_venta, id_venta, id_producto)
+			values(cantidad_p, precio_unitario_p, subtotal_p, uuid(), id_venta_p, id_producto_p);
+    end$$
+delimiter ;
+
+-- ----------------------------------------------------------------------------------------
 -- MOSTRAR 
 
 delimiter $$
@@ -160,6 +200,33 @@ delimiter $$
     end$$
 delimiter ;
 
+-- ------------------------------------------------------------------------
+delimiter $$
+	create procedure sp_mostrar_venta()
+    begin
+		select v.id_venta as 'ID Venta',
+               v.fecha    as 'Fecha',
+               v.total    as 'Total',
+               u.user     as 'Usuario'
+        from Venta v
+        inner join Users u on v.id_user = u.id_user;
+    end$$
+delimiter ;
+
+delimiter $$
+	create procedure sp_mostrar_detalle_venta()
+    begin
+		select dv.id_detalle_venta as 'ID Detalle Venta',
+               dv.cantidad         as 'Cantidad',
+               dv.precio_unitario  as 'Precio Unitario',
+               dv.subtotal         as 'Subtotal',
+               p.nombre            as 'Producto',
+               v.id_venta          as 'ID Venta'
+        from Detalle_venta dv
+        inner join Producto p on dv.id_producto = p.id_producto
+        inner join Venta v on dv.id_venta = v.id_venta;
+    end$$
+delimiter ;
 -- ============================================================================
 -- LEER 
 
@@ -211,6 +278,33 @@ delimiter $$
                p.id_categoria  as 'ID Categoria'
         from Producto p
         where p.id_producto = id_producto_p;
+    end$$
+delimiter ;
+
+-- ---------------------------------------------------------------------------
+delimiter $$
+	create procedure sp_leer_venta(in id_venta_p varchar(36))
+    begin
+		select id_venta as 'ID Venta',
+               fecha    as 'Fecha',
+               total    as 'Total',
+               id_user  as 'ID Usuario'
+        from Venta
+        where id_venta = id_venta_p;
+    end$$
+delimiter ;
+
+delimiter $$
+	create procedure sp_leer_detalle_venta(in id_detalle_venta_p varchar(36))
+    begin
+		select id_detalle_venta as 'ID Detalle Venta',
+               cantidad         as 'Cantidad',
+               precio_unitario  as 'Precio Unitario',
+               subtotal         as 'Subtotal',
+               id_venta         as 'ID Venta',
+               id_producto      as 'ID Producto'
+        from Detalle_venta
+        where id_detalle_venta = id_detalle_venta_p;
     end$$
 delimiter ;
 
@@ -286,6 +380,39 @@ delimiter $$
     end$$
 delimiter ;
 
+-- --------------------------------------------------------------------------
+delimiter $$
+	create procedure sp_editar_venta(in id_venta_p varchar(36),
+									 in fecha_p datetime,
+                                     in total_p decimal(10,2),
+                                     in id_user_p varchar(36))
+    begin
+		update Venta
+        set fecha = fecha_p,
+            total = total_p,
+            id_user = id_user_p
+        where id_venta = id_venta_p;
+    end$$
+delimiter ;
+
+delimiter $$
+	create procedure sp_editar_detalle_venta(in id_detalle_venta_p varchar(36),
+											 in cantidad_p int,
+                                             in precio_unitario_p decimal(10,2),
+                                             in subtotal_p decimal(10,2),
+                                             in id_venta_p varchar(36),
+                                             in id_producto_p varchar(36))
+    begin
+		update Detalle_venta
+        set cantidad = cantidad_p,
+            precio_unitario = precio_unitario_p,
+            subtotal = subtotal_p,
+            id_venta = id_venta_p,
+            id_producto = id_producto_p
+        where id_detalle_venta = id_detalle_venta_p;
+    end$$
+delimiter ;
+
 -- ============================================================================
 -- ELIMINAR
 
@@ -332,6 +459,20 @@ delimiter $$
 	create procedure sp_eliminar_producto(in id_producto_p varchar(36))
     begin
 		delete from Producto where id_producto = id_producto_p;
+    end$$
+delimiter ;
+-- -----------------------------------------------------------
+delimiter $$
+	create procedure sp_eliminar_venta(in id_venta_p varchar(36))
+    begin
+		delete from Venta where id_venta = id_venta_p;
+    end$$
+delimiter ;
+
+delimiter $$
+	create procedure sp_eliminar_detalle_venta(in id_detalle_venta_p varchar(36))
+    begin
+		delete from Detalle_venta where id_detalle_venta = id_detalle_venta_p;
     end$$
 delimiter ;
 -- ============================================================================
@@ -397,7 +538,36 @@ delimiter $$
 delimiter ;
 
 -- ============================================================================
--- PRUEBAS
+-- COMPROBANTE DE VENTA
+
+delimiter $$
+	create procedure sp_comprobante_venta(in id_venta_p varchar (36))
+    begin 
+		select 
+			v.id_venta           as `ID Venta`,
+            v.fecha              as `Fecha`,
+            u.user               as `Cliente`,
+            p.nombre             as `Producto`,
+            c.nombre_categoria   as `Categoria`,
+            dv.cantidad          as `Cantidad`,
+            dv.precio_unitario   as `Precio Unitario`,
+            (dv.cantidad * dv.precio_unitario) as `Subtotal`
+		from Venta v
+			inner join Users u 			on v.id_user = u.id_user
+			inner join Detalle_venta dv 	on dv.id_venta = v.id_venta
+			inner join Producto p 		on p.id_producto = dv.id_producto
+			inner join Categoria c 		on c.id_categoria = p.id_categoria
+		where v.id_venta = id_venta_p
+			order by p.nombre;
+    end $$
+delimiter ;
+
+-- ============================================================================
+-- DATOS DE PRUEBA
+-- NOTA: se agregaron Administrador y Bodeguero (los roles que pedia el
+-- documento del proyecto y que no se habian creado). Se elimino el rol
+-- Cajero: el Cliente arma su propio carrito y finaliza la compra desde
+-- la misma vista del catalogo, sin que un Cajero intervenga.
 
 call sp_create_roles('Administrador', 'Gestiona el catalogo, los usuarios y la configuracion del sistema');
 call sp_create_roles('Gerente', 'Supervisa el inventario y el estado general del negocio');
@@ -409,29 +579,33 @@ call sp_create_users('Dereck', 'Marroquin', 'Derml@correo.com', 'Kirely1', 'KD12
     (select id_rol from Roles where nombre_rol = 'Administrador' limit 1));
 call sp_create_users('David', 'Hernandez', 'David@gmail.com', 'Davdd2', 'DDVID',
     (select id_rol from Roles where nombre_rol = 'Gerente' limit 1));
+call sp_create_users('jeison', 'Garcia', 'jeison@gmail.com', 'jeison', '121212',
+    (select id_rol from Roles where nombre_rol = 'Bodeguero' limit 1));
 call sp_mostrar_users();
-call sp_create_users ('jeison', 'Garcia', 'jeison@gmail.com', 'jeison', '121212',
-	(select id_rol from Roles where nombre_rol = 'Bodeguero' limit 1));
-
-
--- ==================================================================
--- PRUEBAS DE CATEGORIA
-
 
 call sp_create_categoria('Lacteos', 'Leche, queso, yogurt y derivados');
 call sp_create_categoria('Abarrotes', 'Productos basicos de despensa');
-call sp_create_categoria('Golosinas', 'Productos con Texturas suaves, sabores intensos y pura felicidad');
-
+call sp_create_categoria('Golosinas', 'Productos con texturas suaves y sabores intensos');
 call sp_mostrar_categoria();
 
 call sp_create_producto('7501234567890', 'Leche Entera 1L', 50, 8.50, 12.00,
-    (select id_categoria 
-		from Categoria 
-		where nombre_categoria = 'Lacteos' 
-			limit 1));
+    (select id_categoria from Categoria where nombre_categoria = 'Lacteos' limit 1));
 call sp_mostrar_producto();
 
 call sp_registrar_movimiento_stock(
     (select id_producto from Producto where codigo = '7501234567890' limit 1),
     'ENTRADA', 20);
 call sp_mostrar_producto();
+
+-- Prueba de una venta completa (Sprint 3) para confirmar que
+-- sp_comprobante_venta funciona de punta a punta.
+call sp_create_venta(now(), 24.00,
+    (select id_user from Users where user = 'Davdd2' limit 1));
+
+call sp_create_detalle_venta(2, 12.00, 24.00,
+    (select id_venta from Venta order by fecha desc limit 1),
+    (select id_producto from Producto where codigo = '7501234567890' limit 1));
+
+call sp_mostrar_venta();
+call sp_mostrar_detalle_venta();
+call sp_comprobante_venta((select id_venta from Venta order by fecha desc limit 1));
