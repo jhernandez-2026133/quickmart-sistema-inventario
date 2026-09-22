@@ -6,11 +6,7 @@ package org.quickmartkinal.system.utils;
 
 import javafx.scene.control.Alert;
 
-/**
- * Utilidad para mostrar alertas de JavaFX de forma centralizada.
- *
- * @author informatica
- */
+
 public class AlertInformation {
 
     public void viewAlert(String type, String title, String header, String content) {

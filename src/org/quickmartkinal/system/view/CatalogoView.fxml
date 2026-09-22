@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import java.net.URL?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.quickmartkinal.system.controller.CatalogoController" styleClass="root">
+   <stylesheets>
+      <URL value="@../resources/styles/CatalogoStyles.css" />
+   </stylesheets>
+   <top>
+      <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="root">
+         <padding>
+            <Insets bottom="15.0" left="20.0" right="20.0" top="15.0" />
+         </padding>
+         <children>
+            <VBox spacing="4.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <Label styleClass="titulo" text="Catalogo de productos" />
+                  <Label fx:id="lblBienvenida" styleClass="etiqueta" text="Bienvenido" />
+                  <Label fx:id="lblRol" styleClass="subtitulo" text="Rol" />
+               </children>
+            </VBox>
+            <Button fx:id="btnLogout" mnemonicParsing="false" onMouseClicked="#onLogout" styleClass="btn-outline" text="Cerrar sesion" />
+         </children>
+      </HBox>
+   </top>
+   <left>
+      <VBox spacing="10.0" styleClass="card" prefWidth="260.0">
+         <padding>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+         </padding>
+         <BorderPane.margin>
+            <Insets bottom="20.0" left="20.0" right="10.0" />
+         </BorderPane.margin>
+         <children>
+            <Label fx:id="lblCodigo" styleClass="etiqueta" text="Codigo de barras" />
+            <TextField fx:id="txtCodigo" styleClass="campo" promptText="Ej. 7501234567890" />
+            <Label styleClass="etiqueta" text="Nombre del producto" />
+            <TextField fx:id="txtNombre" styleClass="campo" />
+            <Label styleClass="etiqueta" text="Categoria" />
+            <ComboBox fx:id="cmbCategoria" styleClass="campo" maxWidth="Infinity" />
+            <Label fx:id="lblStock" styleClass="etiqueta" text="Stock" />
+            <TextField fx:id="txtStock" styleClass="campo" />
+            <Label fx:id="lblCosto" styleClass="etiqueta" text="Costo" />
+            <TextField fx:id="txtCosto" styleClass="campo" />
+            <Label styleClass="etiqueta" text="Precio de venta" />
+            <TextField fx:id="txtPrecioVenta" styleClass="campo" />
+
+            <VBox spacing="8.0">
+               <VBox.margin>
+                  <Insets top="15.0" />
+               </VBox.margin>
+               <children>
+                  <Button fx:id="btnGuardar" mnemonicParsing="false" onMouseClicked="#onGuardar" styleClass="btn-primary" text="Guardar" maxWidth="Infinity" />
+                  <Button fx:id="btnEditar" mnemonicParsing="false" onMouseClicked="#onEditar" styleClass="btn-secondary" text="Editar" maxWidth="Infinity" />
+                  <Button fx:id="btnEliminar" mnemonicParsing="false" onMouseClicked="#onEliminar" styleClass="btn-danger" text="Eliminar" maxWidth="Infinity" />
+                  <Button fx:id="btnLimpiar" mnemonicParsing="false" onMouseClicked="#onLimpiar" styleClass="btn-outline" text="Limpiar" maxWidth="Infinity" />
+               </children>
+            </VBox>
+         </children>
+      </VBox>
+   </left>
+   <center>
+      <VBox styleClass="root">
+         <BorderPane.margin>
+            <Insets bottom="20.0" right="20.0" top="20.0" />
+         </BorderPane.margin>
+         <children>
+            <TableView fx:id="tblProductos" VBox.vgrow="ALWAYS">
+               <columns>
+                  <TableColumn fx:id="colCodigo" text="Codigo" prefWidth="120.0" />
+                  <TableColumn fx:id="colNombre" text="Nombre" prefWidth="160.0" />
+                  <TableColumn fx:id="colCategoria" text="Categoria" prefWidth="120.0" />
+                  <TableColumn fx:id="colStock" text="Stock" prefWidth="70.0" />
+                  <TableColumn fx:id="colCosto" text="Costo" prefWidth="90.0" />
+                  <TableColumn fx:id="colPrecioVenta" text="Precio Venta" prefWidth="100.0" />
+               </columns>
+            </TableView>
+         </children>
+      </VBox>
+   </center>
+   <right>
+      <VBox fx:id="panelCarrito" spacing="10.0" styleClass="card" prefWidth="260.0" managed="false" visible="false">
+         <padding>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+         </padding>
+         <BorderPane.margin>
+            <Insets bottom="20.0" right="20.0" top="20.0" />
+         </BorderPane.margin>
+         <children>
+            <Label styleClass="etiqueta" text="Mi carrito" />
+            <TableView fx:id="tblCarrito" VBox.vgrow="ALWAYS">
+               <columns>
+                  <TableColumn fx:id="colCarritoProducto" text="Producto" prefWidth="110.0" />
+                  <TableColumn fx:id="colCarritoCantidad" text="Cant." prefWidth="50.0" />
+                  <TableColumn fx:id="colCarritoSubtotal" text="Subtotal" prefWidth="80.0" />
+               </columns>
+            </TableView>
+            <Label fx:id="lblTotalCarrito" styleClass="etiqueta" text="Total: Q0.00" />
+            <Button fx:id="btnQuitarDelCarrito" mnemonicParsing="false" onMouseClicked="#onQuitarDelCarrito" styleClass="btn-danger" text="Quitar del carrito" maxWidth="Infinity" />
+            <Button fx:id="btnFinalizarCompra" mnemonicParsing="false" onMouseClicked="#onFinalizarCompra" styleClass="btn-primary" text="Finalizar compra" maxWidth="Infinity" />
+         </children>
+      </VBox>
+   </right>
+</BorderPane>

@@ -12,7 +12,6 @@ import javafx.fxml.JavaFXBuilderFactory;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import org.quickmartkinal.system.ClasePrincipal;
-import org.quickmartkinal.system.controller.DashboardController;
 import org.quickmartkinal.system.model.Usuario;
 
 /**
@@ -71,9 +70,9 @@ public class ViewFactory {
         loadScene("register");
     }
 
-    public void viewDashboard(Usuario usuario) {
+    public void viewCatalogo(Usuario usuario) {
         try {
-            String pathOffFile = PATH_VIEWS + "DashboardView.fxml";
+            String pathOffFile = PATH_VIEWS + "CatalogoView.fxml";
 
             FXMLLoader loaderFXML = new FXMLLoader();
             URL urlFile = ClasePrincipal.class.getResource(pathOffFile);
@@ -82,17 +81,14 @@ public class ViewFactory {
 
             Parent root = loaderFXML.load();
 
-            DashboardController controller = loaderFXML.getController();
-            controller.setUsuario(usuario);
+            Scene scene = new Scene(root, 900, 550);
 
-            Scene scene = new Scene(root, 700, 480);
-
-            SceneManager.getInstanciaSceneManager().getStagePrincipal().setTitle("QUICKMART - CATALOGO");
+            SceneManager.getInstanciaSceneManager().getStagePrincipal().setTitle("QUICKMART - CATALOGO DE PRODUCTOS");
             SceneManager.getInstanciaSceneManager().getStagePrincipal().setResizable(true);
             SceneManager.getInstanciaSceneManager().changeScene(scene);
 
         } catch (IOException e) {
-            System.out.println("Error al cargar el Dashboard: " + e.getMessage());
+            System.out.println("Error al cargar el Catalogo: " + e.getMessage());
             alertInfo.viewAlert("ERROR", "ERROR AL CARGAR", "ERROR AL ABRIR EL MODULO", "Ocurrio un error, intenta nuevamente.");
         }
     }

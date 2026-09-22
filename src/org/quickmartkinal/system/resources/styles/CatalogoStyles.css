@@ -1,0 +1,135 @@
+.root {
+    -fx-background-color: #1b2124;
+    -fx-font-family: "Segoe UI";
+
+    -color-bg-dark: #1b2124;
+    -color-card: #242b2f;
+    -color-white: #ffffff;
+    -color-green: #2e7d32;
+    -color-green-hover: #388e3c;
+    -color-blue: #1e88e5;
+    -color-orange: #f57c00;
+    -color-orange-hover: #fb8c00;
+    -color-red: #c62828;
+    -color-red-hover: #e53935;
+}
+
+.card {
+    -fx-background-color: -color-card;
+    -fx-background-radius: 16;
+    -fx-border-radius: 16;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.45), 14, 0.2, 0, 4);
+}
+
+.titulo {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -color-white;
+}
+
+.subtitulo {
+    -fx-font-size: 12px;
+    -fx-text-fill: derive(-color-white, -20%);
+}
+
+.etiqueta {
+    -fx-text-fill: -color-white;
+    -fx-font-size: 13px;
+}
+
+.etiqueta-secundaria {
+    -fx-text-fill: derive(-color-white, -15%);
+    -fx-font-size: 12px;
+}
+
+.campo {
+    -fx-background-color: -color-white;
+    -fx-text-fill: #1b2124;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-border-color: -color-blue;
+    -fx-border-width: 1.5px;
+    -fx-padding: 6 10 6 10;
+    -fx-prompt-text-fill: #7d8a94;
+}
+
+.campo:focused {
+    -fx-border-color: derive(-color-blue, 25%);
+    -fx-effect: dropshadow(gaussian, -color-blue, 8, 0.35, 0, 0);
+}
+
+.btn-primary {
+    -fx-background-color: -color-green;
+    -fx-text-fill: -color-white;
+    -fx-background-radius: 24;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+.btn-primary:hover {
+    -fx-background-color: -color-green-hover;
+}
+
+.btn-secondary {
+    -fx-background-color: -color-blue;
+    -fx-text-fill: -color-white;
+    -fx-background-radius: 24;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+.btn-secondary:hover {
+    -fx-background-color: derive(-color-blue, 15%);
+}
+
+.btn-danger {
+    -fx-background-color: -color-red;
+    -fx-text-fill: -color-white;
+    -fx-background-radius: 24;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+.btn-danger:hover {
+    -fx-background-color: -color-red-hover;
+}
+
+.btn-outline {
+    -fx-background-color: transparent;
+    -fx-text-fill: -color-white;
+    -fx-border-color: derive(-color-white, -30%);
+    -fx-border-radius: 24;
+    -fx-background-radius: 24;
+    -fx-cursor: hand;
+}
+.btn-outline:hover {
+    -fx-border-color: -color-white;
+}
+
+.table-view {
+    -fx-background-color: -color-card;
+    -fx-background-radius: 12;
+    -fx-table-cell-border-color: transparent;
+}
+.table-view .column-header-background {
+    -fx-background-color: derive(-color-card, -10%);
+    -fx-background-radius: 12 12 0 0;
+}
+.table-view .column-header, .table-view .filler {
+    -fx-background-color: transparent;
+    -fx-size: 36px;
+}
+.table-view .column-header .label {
+    -fx-text-fill: -color-white;
+    -fx-font-weight: bold;
+}
+.table-view .table-cell {
+    -fx-text-fill: -color-white;
+    -fx-alignment: CENTER-LEFT;
+}
+.table-row-cell {
+    -fx-background-color: -color-card;
+}
+.table-row-cell:odd {
+    -fx-background-color: derive(-color-card, 6%);
+}
+.table-row-cell:selected {
+    -fx-background-color: derive(-color-blue, -20%);
+}
