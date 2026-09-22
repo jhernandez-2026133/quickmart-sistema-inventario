@@ -1,4 +1,4 @@
--- drop database if exists proyecto_quickmart_inventory_kinal_in4av;
+drop database if exists proyecto_quickmart_inventory_kinal_in4av;
 create database proyecto_quickmart_inventory_kinal_in4av;
 use proyecto_quickmart_inventory_kinal_in4av;
 
@@ -397,11 +397,7 @@ delimiter $$
 delimiter ;
 
 -- ============================================================================
--- DATOS DE PRUEBA
--- NOTA: se agregaron Administrador y Bodeguero (los roles que pedia el
--- documento del proyecto y que no se habian creado). Se elimino el rol
--- Cajero: el Cliente arma su propio carrito y finaliza la compra desde
--- la misma vista del catalogo, sin que un Cajero intervenga.
+-- PRUEBAS
 
 call sp_create_roles('Administrador', 'Gestiona el catalogo, los usuarios y la configuracion del sistema');
 call sp_create_roles('Gerente', 'Supervisa el inventario y el estado general del negocio');
@@ -414,13 +410,25 @@ call sp_create_users('Dereck', 'Marroquin', 'Derml@correo.com', 'Kirely1', 'KD12
 call sp_create_users('David', 'Hernandez', 'David@gmail.com', 'Davdd2', 'DDVID',
     (select id_rol from Roles where nombre_rol = 'Gerente' limit 1));
 call sp_mostrar_users();
+call sp_create_users ('jeison', 'Garcia', 'jeison@gmail.com', 'jeison', '121212',
+	(select id_rol from Roles where nombre_rol = 'Bodeguero' limit 1));
+
+
+-- ==================================================================
+-- PRUEBAS DE CATEGORIA
+
 
 call sp_create_categoria('Lacteos', 'Leche, queso, yogurt y derivados');
 call sp_create_categoria('Abarrotes', 'Productos basicos de despensa');
+call sp_create_categoria('Golosinas', 'Productos con Texturas suaves, sabores intensos y pura felicidad');
+
 call sp_mostrar_categoria();
 
 call sp_create_producto('7501234567890', 'Leche Entera 1L', 50, 8.50, 12.00,
-    (select id_categoria from Categoria where nombre_categoria = 'Lacteos' limit 1));
+    (select id_categoria 
+		from Categoria 
+		where nombre_categoria = 'Lacteos' 
+			limit 1));
 call sp_mostrar_producto();
 
 call sp_registrar_movimiento_stock(
