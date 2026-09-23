@@ -10,7 +10,7 @@ package org.quickmartkinal.system.model;
  */
 public class Usuario {
 
-    private int idUsuario;
+    private String idUsuario;
     private String nombre;
     private String apellido;
     private String correo;
@@ -29,10 +29,13 @@ public class Usuario {
         this.nombreRol = nombreRol;
     }
 
-    public Usuario(int idUsuario, String nombreUsuario, String contrasena, String nombreRol) {
+    /**
+     * Constructor usado al iniciar sesion cuando tambien se necesita el
+     * id_user real (por ejemplo, para registrar una venta).
+     */
+    public Usuario(String idUsuario, String nombreUsuario, String nombreRol) {
         this.idUsuario = idUsuario;
         this.nombreUsuario = nombreUsuario;
-        this.contrasena = contrasena;
         this.nombreRol = nombreRol;
     }
 
@@ -47,11 +50,11 @@ public class Usuario {
         this.contrasena = contrasena;
     }
 
-    public int getIdUsuario() {
+    public String getIdUsuario() {
         return idUsuario;
     }
 
-    public void setIdUsuario(int idUsuario) {
+    public void setIdUsuario(String idUsuario) {
         this.idUsuario = idUsuario;
     }
 

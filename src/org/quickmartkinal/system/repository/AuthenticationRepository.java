@@ -32,6 +32,7 @@ public class AuthenticationRepository implements AuthenticationInterface {
                 try (ResultSet resultSet = callSP.getResultSet()) {
                     if (resultSet.next()) {
                         usuarioLogueado = new Usuario(
+                                resultSet.getString("id_user"),
                                 resultSet.getString("nombre_usuario"),
                                 resultSet.getString("nombre_rol")
                         );

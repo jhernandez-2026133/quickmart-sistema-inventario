@@ -21,4 +21,10 @@ public interface ProductoInterface {
 
     boolean eliminar(String idProducto);
 
+    /**
+     * Registra una entrada o salida de stock (THU 3.6 / THU 3.7).
+     * tipoMovimiento debe ser "ENTRADA" o "SALIDA".
+     */
+    boolean registrarMovimientoStock(String idProducto, String tipoMovimiento, int cantidad);
+
 }
