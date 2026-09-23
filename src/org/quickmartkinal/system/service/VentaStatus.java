@@ -8,13 +8,8 @@ package org.quickmartkinal.system.service;
  *
  * @author informatica
  */
-public enum CatalogoStatus {
-    PRODUCTO_GUARDADO,
-    PRODUCTO_ACTUALIZADO,
-    PRODUCTO_ELIMINADO,
-    CODIGO_DUPLICADO,
-    PRECIO_INVALIDO,
-    MOVIMIENTO_REGISTRADO,
+public enum VentaStatus {
+    VENTA_REGISTRADA,
     STOCK_INSUFICIENTE,
     OPERACION_FALLIDA
 }

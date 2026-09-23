@@ -63,6 +63,39 @@ public class CatalogoService {
         return CatalogoStatus.PRODUCTO_ACTUALIZADO;
     }
 
+    /**
+     * THU 3.6 / THU 3.7: registra una entrada o salida de stock para un
+     * producto ya existente. tipoMovimiento debe ser "ENTRADA" o "SALIDA".
+     */
+    public CatalogoStatus registrarMovimientoStock(String idProducto, String tipoMovimiento, int cantidad) {
+        if (cantidad <= 0) {
+            return CatalogoStatus.OPERACION_FALLIDA;
+        }
+
+        if ("SALIDA".equals(tipoMovimiento)) {
+            Producto producto = buscarPorId(idProducto);
+            boolean stockSuficiente = producto != null && cantidad <= producto.getStock();
+            if (stockSuficiente == false) {
+                return CatalogoStatus.STOCK_INSUFICIENTE;
+            }
+        }
+
+        boolean registrado = productoRepository.registrarMovimientoStock(idProducto, tipoMovimiento, cantidad);
+        if (registrado == false) {
+            return CatalogoStatus.OPERACION_FALLIDA;
+        }
+        return CatalogoStatus.MOVIMIENTO_REGISTRADO;
+    }
+
+    private Producto buscarPorId(String idProducto) {
+        for (Producto producto : productoRepository.listar()) {
+            if (producto.getIdProducto().equals(idProducto)) {
+                return producto;
+            }
+        }
+        return null;
+    }
+
     public CatalogoStatus eliminarProducto(String idProducto) {
         boolean eliminado = productoRepository.eliminar(idProducto);
         if (eliminado == false) {

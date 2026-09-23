@@ -5,6 +5,7 @@
 package org.quickmartkinal.system.controller;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -20,11 +21,14 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import org.quickmartkinal.system.model.Categoria;
+import org.quickmartkinal.system.model.ComprobanteItem;
 import org.quickmartkinal.system.model.ItemCarrito;
 import org.quickmartkinal.system.model.Producto;
 import org.quickmartkinal.system.model.Usuario;
 import org.quickmartkinal.system.service.CatalogoService;
 import org.quickmartkinal.system.service.CatalogoStatus;
+import org.quickmartkinal.system.service.VentaService;
+import org.quickmartkinal.system.service.VentaStatus;
 import org.quickmartkinal.system.utils.AlertInformation;
 import org.quickmartkinal.system.utils.Sesion;
 import org.quickmartkinal.system.utils.Validations;
@@ -34,6 +38,7 @@ public class CatalogoController implements Initializable {
 
     private static final String ROL_GERENTE = "Gerente";
     private static final String ROL_CLIENTE = "Cliente";
+    private static final String ROL_BODEGUERO = "Bodeguero";
 
     @FXML
     private Label lblBienvenida;
@@ -63,6 +68,8 @@ public class CatalogoController implements Initializable {
     private TextField txtCodigo;
     @FXML
     private TextField txtNombre;
+    @FXML
+    private Label lblCategoria;
     @FXML
     private ComboBox<Categoria> cmbCategoria;
     @FXML
@@ -102,13 +109,23 @@ public class CatalogoController implements Initializable {
     @FXML
     private Button btnFinalizarCompra;
 
+    @FXML
+    private Button btnEntrada;
+    @FXML
+    private Button btnSalida;
+    @FXML
+    private Button btnVerInventarioVentas;
+
     private final CatalogoService catalogoService = new CatalogoService();
+    private final VentaService ventaService = new VentaService();
     private final Validations validate = new Validations();
     private final AlertInformation alertInfo = new AlertInformation();
     private final ObservableList<ItemCarrito> carrito = FXCollections.observableArrayList();
 
     private Producto productoSeleccionado;
+    private Usuario usuarioActual;
     private boolean esCliente = false;
+    private boolean esBodeguero = false;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -121,17 +138,19 @@ public class CatalogoController implements Initializable {
 
         tblProductos.setOnMouseClicked((MouseEvent event) -> onSeleccionarFila());
 
-        Usuario usuarioActual = Sesion.getInstanciaSesion().getUsuarioActual();
+        usuarioActual = Sesion.getInstanciaSesion().getUsuarioActual();
         if (usuarioActual != null) {
             lblBienvenida.setText("Bienvenido, " + usuarioActual.getNombreUsuario());
             lblRol.setText("Rol: " + usuarioActual.getNombreRol());
         }
 
         String rolActual = usuarioActual != null ? usuarioActual.getNombreRol() : "";
-        boolean esGerente = ROL_GERENTE.equals(rolActual);
-        esCliente = ROL_CLIENTE.equals(rolActual);
+        boolean esGerente = ROL_GERENTE.equalsIgnoreCase(rolActual);
+        esCliente = ROL_CLIENTE.equalsIgnoreCase(rolActual);
+        esBodeguero = ROL_BODEGUERO.equalsIgnoreCase(rolActual);
 
-        // THU 3.5: el Gerente solo puede consultar el catalogo, no editarlo.
+        // THU 3.5: el Gerente solo puede consultar el catalogo, no editarlo,
+        // y ademas puede consultar el inventario de ventas del negocio.
         if (esGerente) {
             txtCodigo.setDisable(true);
             txtNombre.setDisable(true);
@@ -140,22 +159,39 @@ public class CatalogoController implements Initializable {
             txtCosto.setDisable(true);
             txtPrecioVenta.setDisable(true);
             ocultar(btnGuardar, btnEditar, btnEliminar, btnLimpiar);
+
+            btnVerInventarioVentas.setVisible(true);
+            btnVerInventarioVentas.setManaged(true);
         }
 
         // El Cliente no administra el catalogo: solo ve producto/categoria/precio,
         // usa el campo "Stock" como cantidad a comprar, y "Guardar" agrega al carrito.
         if (esCliente) {
-            ocultar(lblCodigo, txtCodigo, lblCosto, txtCosto, btnEditar, btnEliminar);
+            ocultar(lblCodigo, txtCodigo, lblCosto, txtCosto, lblCategoria, cmbCategoria,
+                    btnEditar, btnEliminar);
             colCosto.setVisible(false);
             txtNombre.setEditable(false);
             txtPrecioVenta.setEditable(false);
-            cmbCategoria.setDisable(true);
             lblStock.setText("Cantidad a comprar");
             btnGuardar.setText("Agregar al carrito");
 
             panelCarrito.setVisible(true);
             panelCarrito.setManaged(true);
             configurarTablaCarrito();
+        }
+
+        // THU 3.7: el Bodeguero no administra precios ni categorias, solo
+        // registra entradas/salidas de stock del producto seleccionado.
+        if (esBodeguero) {
+            ocultar(lblCodigo, txtCodigo, lblCosto, txtCosto, txtPrecioVenta, lblCategoria, cmbCategoria,
+                    btnGuardar, btnEditar, btnEliminar);
+            txtNombre.setEditable(false);
+            lblStock.setText("Cantidad del movimiento");
+
+            btnEntrada.setVisible(true);
+            btnEntrada.setManaged(true);
+            btnSalida.setVisible(true);
+            btnSalida.setManaged(true);
         }
 
         cargarCategorias();
@@ -317,17 +353,36 @@ public class CatalogoController implements Initializable {
             alertInfo.viewAlert("ERROR", "CARRITO VACIO", "ERROR", "Agrega al menos un producto antes de finalizar la compra.");
             return;
         }
-
-        // NOTA: el registro real de la venta (y el comprobante en PDF) Se hara cuando ya este el sprint 3
-        StringBuilder resumen = new StringBuilder();
-        for (ItemCarrito item : carrito) {
-            resumen.append(item.getCantidad()).append(" x ").append(item.getNombreProducto()).append("\n");
+        if (usuarioActual == null || usuarioActual.getIdUsuario() == null) {
+            alertInfo.viewAlert("ERROR", "SESION INVALIDA", "ERROR", "No se encontro tu sesion. Vuelve a iniciar sesion.");
+            return;
         }
-        resumen.append(lblTotalCarrito.getText());
 
-        alertInfo.viewAlert("INFORMATION", "COMPRA REGISTRADA", "RESUMEN DE TU COMPRA", resumen.toString());
+        VentaStatus status = ventaService.registrarVenta(carrito, usuarioActual.getIdUsuario());
+
+        switch (status) {
+            case STOCK_INSUFICIENTE ->
+                alertInfo.viewAlert("ERROR", "STOCK INSUFICIENTE", "NO SE REGISTRO LA COMPRA",
+                        "Alguno de los productos ya no tiene suficiente stock disponible. Revisa tu carrito.");
+            case OPERACION_FALLIDA ->
+                alertInfo.viewAlert("ERROR", "ERROR AL REGISTRAR", "OCURRIO UN ERROR",
+                        "No se pudo registrar la compra. Intenta nuevamente.");
+            case VENTA_REGISTRADA ->
+                generarYAbrirComprobante(ventaService.getUltimoIdVenta());
+            default -> {
+            }
+        }
+    }
+
+    private void generarYAbrirComprobante(String idVenta) {
+        List<ComprobanteItem> renglones = ventaService.obtenerComprobante(idVenta);
+
+        ViewFactory viewFactory = new ViewFactory();
+        viewFactory.viewComprobante(renglones);
+
         carrito.clear();
         actualizarTotalCarrito();
+        cargarProductos();
     }
 
     @FXML
@@ -367,6 +422,64 @@ public class CatalogoController implements Initializable {
     @FXML
     public void onLimpiar(MouseEvent event) {
         limpiarFormulario();
+    }
+
+    @FXML
+    public void onVerInventarioVentas(MouseEvent event) {
+        List<ComprobanteItem> renglones = ventaService.obtenerInventarioVentas();
+        if (renglones.isEmpty()) {
+            alertInfo.viewAlert("INFORMATION", "SIN VENTAS", "INVENTARIO DE VENTAS",
+                    "Todavia no hay ventas registradas en el sistema.");
+            return;
+        }
+
+        ViewFactory viewFactory = new ViewFactory();
+        viewFactory.viewInventarioVentas(renglones);
+    }
+
+    @FXML
+    public void onEntrada(MouseEvent event) {
+        registrarMovimiento("ENTRADA");
+    }
+
+    @FXML
+    public void onSalida(MouseEvent event) {
+        registrarMovimiento("SALIDA");
+    }
+
+    private void registrarMovimiento(String tipoMovimiento) {
+        if (productoSeleccionado == null) {
+            alertInfo.viewAlert("ERROR", "SIN SELECCION", "ERROR", "Selecciona un producto de la tabla.");
+            return;
+        }
+
+        int cantidad;
+        try {
+            cantidad = Integer.parseInt(txtStock.getText().trim());
+        } catch (NumberFormatException e) {
+            alertInfo.viewAlert("ERROR", "CANTIDAD INVALIDA", "ERROR DE FORMATO", "La cantidad debe ser un numero.");
+            return;
+        }
+
+        CatalogoStatus status = catalogoService.registrarMovimientoStock(
+                productoSeleccionado.getIdProducto(), tipoMovimiento, cantidad);
+
+        switch (status) {
+            case STOCK_INSUFICIENTE ->
+                alertInfo.viewAlert("ERROR", "STOCK INSUFICIENTE", "NO SE REGISTRO EL MOVIMIENTO",
+                        "No hay suficiente stock disponible para esa salida.");
+            case OPERACION_FALLIDA ->
+                alertInfo.viewAlert("ERROR", "ERROR AL REGISTRAR", "OCURRIO UN ERROR",
+                        "No se pudo registrar el movimiento. Intenta nuevamente.");
+            case MOVIMIENTO_REGISTRADO -> {
+                alertInfo.viewAlert("INFORMATION", "MOVIMIENTO REGISTRADO", "STOCK ACTUALIZADO",
+                        "El movimiento de " + tipoMovimiento.toLowerCase() + " se registro correctamente.");
+                limpiarFormulario();
+                cargarProductos();
+            }
+            default -> {
+            }
+        }
     }
 
     private void mostrarResultado(CatalogoStatus status) {
