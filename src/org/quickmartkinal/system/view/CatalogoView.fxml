@@ -46,7 +46,7 @@
             <TextField fx:id="txtCodigo" styleClass="campo" promptText="Ej. 7501234567890" />
             <Label styleClass="etiqueta" text="Nombre del producto" />
             <TextField fx:id="txtNombre" styleClass="campo" />
-            <Label styleClass="etiqueta" text="Categoria" />
+            <Label fx:id="lblCategoria" styleClass="etiqueta" text="Categoria" />
             <ComboBox fx:id="cmbCategoria" styleClass="campo" maxWidth="Infinity" />
             <Label fx:id="lblStock" styleClass="etiqueta" text="Stock" />
             <TextField fx:id="txtStock" styleClass="campo" />
@@ -64,6 +64,9 @@
                   <Button fx:id="btnEditar" mnemonicParsing="false" onMouseClicked="#onEditar" styleClass="btn-secondary" text="Editar" maxWidth="Infinity" />
                   <Button fx:id="btnEliminar" mnemonicParsing="false" onMouseClicked="#onEliminar" styleClass="btn-danger" text="Eliminar" maxWidth="Infinity" />
                   <Button fx:id="btnLimpiar" mnemonicParsing="false" onMouseClicked="#onLimpiar" styleClass="btn-outline" text="Limpiar" maxWidth="Infinity" />
+                  <Button fx:id="btnEntrada" mnemonicParsing="false" onMouseClicked="#onEntrada" styleClass="btn-primary" text="Registrar entrada" maxWidth="Infinity" managed="false" visible="false" />
+                  <Button fx:id="btnSalida" mnemonicParsing="false" onMouseClicked="#onSalida" styleClass="btn-danger" text="Registrar salida" maxWidth="Infinity" managed="false" visible="false" />
+                  <Button fx:id="btnVerInventarioVentas" mnemonicParsing="false" onMouseClicked="#onVerInventarioVentas" styleClass="btn-secondary" text="Ver inventario de ventas" maxWidth="Infinity" managed="false" visible="false" />
                </children>
             </VBox>
          </children>

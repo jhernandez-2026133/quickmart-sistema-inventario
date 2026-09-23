@@ -89,6 +89,21 @@ public class ProductoRepository implements ProductoInterface {
     }
 
     @Override
+    public boolean registrarMovimientoStock(String idProducto, String tipoMovimiento, int cantidad) {
+        boolean registrado = false;
+        try (CallableStatement callSP = conexionDB.getConnection().prepareCall("{call sp_registrar_movimiento_stock(?,?,?)}")) {
+            callSP.setString(1, idProducto);
+            callSP.setString(2, tipoMovimiento);
+            callSP.setInt(3, cantidad);
+            callSP.execute();
+            registrado = true;
+        } catch (SQLException e) {
+            System.out.println("Error al registrar el movimiento de stock: " + e.getMessage());
+        }
+        return registrado;
+    }
+
+    @Override
     public boolean eliminar(String idProducto) {
         boolean eliminado = false;
         try (CallableStatement callSP = conexionDB.getConnection().prepareCall("{call sp_eliminar_producto(?)}")) {
