@@ -539,7 +539,6 @@ delimiter ;
 
 -- ============================================================================
 -- COMPROBANTE DE VENTA
-
 delimiter $$
 	create procedure sp_comprobante_venta(in id_venta_p varchar (36))
     begin 
@@ -585,3 +584,75 @@ delimiter $$
 		order by v.fecha desc, p.nombre;
     end $$
 delimiter ;
+
+
+delimiter $$
+	create procedure sp_comprobante_venta(in id_venta_p varchar (36))
+    begin 
+		select 
+			v.id_venta           as `ID Venta`,
+            v.fecha              as `Fecha`,
+            u.user               as `Cliente`,
+            p.nombre             as `Producto`,
+            c.nombre_categoria   as `Categoria`,
+            dv.cantidad          as `Cantidad`,
+            dv.precio_unitario   as `Precio Unitario`,
+            (dv.cantidad * dv.precio_unitario) as `Subtotal`
+		from Venta v
+			inner join Users u 			on v.id_user = u.id_user
+			inner join Detalle_venta dv 	on dv.id_venta = v.id_venta
+			inner join Producto p 		on p.id_producto = dv.id_producto
+			inner join Categoria c 		on c.id_categoria = p.id_categoria
+		where v.id_venta = id_venta_p
+			order by p.nombre;
+    end $$
+delimiter ;
+
+-- ============================================================================
+-- DATOS DE PRUEBA
+-- NOTA: se agregaron Administrador y Bodeguero (los roles que pedia el
+-- documento del proyecto y que no se habian creado). Se elimino el rol
+-- Cajero: el Cliente arma su propio carrito y finaliza la compra desde
+-- la misma vista del catalogo, sin que un Cajero intervenga.
+
+call sp_create_roles('Administrador', 'Gestiona el catalogo, los usuarios y la configuracion del sistema');
+call sp_create_roles('Gerente', 'Supervisa el inventario y el estado general del negocio');
+call sp_create_roles('Bodeguero', 'Controla entradas y salidas de stock');
+call sp_create_roles('Cliente', 'Usuario registrado desde la aplicacion para realizar compras');
+call sp_mostrar_roles();
+
+call sp_create_users('Dereck', 'Marroquin', 'Derml@correo.com', 'Kirely1', 'KD1233',
+    (select id_rol from Roles where nombre_rol = 'Administrador' limit 1));
+call sp_create_users('David', 'Hernandez', 'David@gmail.com', 'Davdd2', 'DDVID',
+    (select id_rol from Roles where nombre_rol = 'Gerente' limit 1));
+call sp_create_users('jeison', 'Garcia', 'jeison@gmail.com', 'jeison', '121212',
+    (select id_rol from Roles where nombre_rol = 'Bodeguero' limit 1));
+call sp_mostrar_users();
+
+call sp_create_categoria('Lacteos', 'Leche, queso, yogurt y derivados');
+call sp_create_categoria('Abarrotes', 'Productos basicos de despensa');
+call sp_create_categoria('Golosinas', 'Productos con texturas suaves y sabores intensos');
+call sp_mostrar_categoria();
+
+call sp_create_producto('7501234567890', 'Leche Entera 1L', 50, 8.50, 12.00,
+    (select id_categoria from Categoria where nombre_categoria = 'Lacteos' limit 1));
+call sp_mostrar_producto();
+
+call sp_registrar_movimiento_stock(
+    (select id_producto from Producto where codigo = '7501234567890' limit 1),
+    'ENTRADA', 20);
+call sp_mostrar_producto();
+
+-- Prueba de una venta completa (Sprint 3) para confirmar que
+-- sp_comprobante_venta funciona de punta a punta.
+call sp_create_venta(now(), 24.00,
+    (select id_user from Users where user = 'Davdd2' limit 1));
+
+call sp_create_detalle_venta(2, 12.00, 24.00,
+    (select id_venta from Venta order by fecha desc limit 1),
+    (select id_producto from Producto where codigo = '7501234567890' limit 1));
+
+call sp_mostrar_venta();
+call sp_mostrar_detalle_venta();
+call sp_comprobante_venta((select id_venta from Venta order by fecha desc limit 1));
+
