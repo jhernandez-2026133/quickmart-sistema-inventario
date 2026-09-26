@@ -21,12 +21,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.quickmartkinal.system.model.ComprobanteItem;
 
-/**
- * THU: pantalla de solo lectura para que el Gerente consulte el inventario
- * de ventas (todas las ventas registradas en el sistema).
- *
- * @author informatica
- */
 public class InventarioVentasController implements Initializable {
 
     @FXML

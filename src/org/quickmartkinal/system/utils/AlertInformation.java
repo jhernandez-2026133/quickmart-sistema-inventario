@@ -6,7 +6,6 @@ package org.quickmartkinal.system.utils;
 
 import javafx.scene.control.Alert;
 
-
 public class AlertInformation {
 
     public void viewAlert(String type, String title, String header, String content) {

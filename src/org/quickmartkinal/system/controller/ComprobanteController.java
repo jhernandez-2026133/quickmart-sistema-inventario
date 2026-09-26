@@ -60,7 +60,6 @@ public class ComprobanteController implements Initializable {
         colSubtotal.setCellValueFactory(new PropertyValueFactory<>("subtotal"));
     }
 
-   
     public void cargarComprobante(List<ComprobanteItem> renglones) {
         if (renglones.isEmpty()) {
             return;

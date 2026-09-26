@@ -21,27 +21,17 @@ public class Usuario {
     public Usuario() {
     }
 
-    /**
-     * Constructor usado al iniciar sesion (solo se conoce usuario y rol).
-     */
     public Usuario(String nombreUsuario, String nombreRol) {
         this.nombreUsuario = nombreUsuario;
         this.nombreRol = nombreRol;
     }
 
-    /**
-     * Constructor usado al iniciar sesion cuando tambien se necesita el
-     * id_user real (por ejemplo, para registrar una venta).
-     */
     public Usuario(String idUsuario, String nombreUsuario, String nombreRol) {
         this.idUsuario = idUsuario;
         this.nombreUsuario = nombreUsuario;
         this.nombreRol = nombreRol;
     }
 
-    /**
-     * Constructor usado al registrar un nuevo usuario.
-     */
     public Usuario(String nombre, String apellido, String correo, String nombreUsuario, String contrasena) {
         this.nombre = nombre;
         this.apellido = apellido;
