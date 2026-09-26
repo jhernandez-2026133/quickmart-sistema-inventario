@@ -4,13 +4,7 @@
  */
 package org.quickmartkinal.system.model;
 
-/**
- * Representa un renglon del carrito de compras del Cliente. Vive solo en
- * memoria mientras tanto: todavia no se guarda en la base de datos porque
- * las tablas de venta/detalle_venta son del Sprint 3.
- *
- * @author informatica
- */
+
 public class ItemCarrito {
 
     private Producto producto;

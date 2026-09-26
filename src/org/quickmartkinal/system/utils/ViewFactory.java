@@ -99,7 +99,6 @@ public class ViewFactory {
         }
     }
 
-  
     public void viewComprobante(List<ComprobanteItem> renglones) {
         try {
             String pathOffFile = PATH_VIEWS + "ComprobanteView.fxml";

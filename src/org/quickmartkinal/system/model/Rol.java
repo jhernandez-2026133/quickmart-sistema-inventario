@@ -9,13 +9,13 @@ package org.quickmartkinal.system.model;
  * @author informatica
  */
 public class Rol {
-    
+
     private String idRol;
     private String nombreRol;
     private String descripcionRol;
-    
+
     public Rol () {
-        
+
     }
 
     public Rol(String idRol, String nombreRol, String descripcionRol) {
@@ -47,5 +47,5 @@ public class Rol {
     public void setDescripcionRol(String descripcionRol) {
         this.descripcionRol = descripcionRol;
     }
-    
+
 }

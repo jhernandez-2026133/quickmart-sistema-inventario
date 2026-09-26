@@ -149,7 +149,7 @@ public class CatalogoController implements Initializable {
         esCliente = ROL_CLIENTE.equalsIgnoreCase(rolActual);
         esBodeguero = ROL_BODEGUERO.equalsIgnoreCase(rolActual);
 
-        // THU 3.5: el Gerente solo puede consultar el catalogo, no editarlo,
+        // el Gerente solo puede consultar el catalogo, no editarlo,
         // y ademas puede consultar el inventario de ventas del negocio.
         if (esGerente) {
             txtCodigo.setDisable(true);
@@ -180,7 +180,7 @@ public class CatalogoController implements Initializable {
             configurarTablaCarrito();
         }
 
-        // THU 3.7: el Bodeguero no administra precios ni categorias, solo
+        // el Bodeguero no administra precios ni categorias, solo
         // registra entradas/salidas de stock del producto seleccionado.
         if (esBodeguero) {
             ocultar(lblCodigo, txtCodigo, lblCosto, txtCosto, txtPrecioVenta, lblCategoria, cmbCategoria,
