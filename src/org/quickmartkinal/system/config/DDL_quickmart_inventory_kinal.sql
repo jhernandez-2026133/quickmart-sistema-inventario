@@ -584,26 +584,3 @@ delimiter $$
 		order by v.fecha desc, p.nombre;
     end $$
 delimiter ;
-
-
-delimiter $$
-	create procedure sp_comprobante_venta(in id_venta_p varchar (36))
-    begin 
-		select 
-			v.id_venta           as `ID Venta`,
-            v.fecha              as `Fecha`,
-            u.user               as `Cliente`,
-            p.nombre             as `Producto`,
-            c.nombre_categoria   as `Categoria`,
-            dv.cantidad          as `Cantidad`,
-            dv.precio_unitario   as `Precio Unitario`,
-            (dv.cantidad * dv.precio_unitario) as `Subtotal`
-		from Venta v
-			inner join Users u 			on v.id_user = u.id_user
-			inner join Detalle_venta dv 	on dv.id_venta = v.id_venta
-			inner join Producto p 		on p.id_producto = dv.id_producto
-			inner join Categoria c 		on c.id_categoria = p.id_categoria
-		where v.id_venta = id_venta_p
-			order by p.nombre;
-    end $$
-delimiter ;
